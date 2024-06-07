@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27A841A32C13989F00C6A303 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 27A841A22C13989F00C6A303 /* LaunchAtLogin */; };
 		27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */; };
 		27FA32B82C13510E002F38E3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B72C13510E002F38E3 /* ContentView.swift */; };
 		27FA32BA2C13510F002F38E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27FA32B92C13510F002F38E3 /* Assets.xcassets */; };
@@ -54,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27A841A32C13989F00C6A303 /* LaunchAtLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +150,9 @@
 			dependencies = (
 			);
 			name = LoosePhabric;
+			packageProductDependencies = (
+				27A841A22C13989F00C6A303 /* LaunchAtLogin */,
+			);
 			productName = LoosePhabric;
 			productReference = 27FA32B22C13510E002F38E3 /* LoosePhabric.app */;
 			productType = "com.apple.product-type.application";
@@ -220,6 +225,9 @@
 				Base,
 			);
 			mainGroup = 27FA32A92C13510E002F38E3;
+			packageReferences = (
+				27A841A12C13989F00C6A303 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
+			);
 			productRefGroup = 27FA32B32C13510E002F38E3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -589,6 +597,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		27A841A12C13989F00C6A303 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		27A841A22C13989F00C6A303 /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A841A12C13989F00C6A303 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
+			productName = LaunchAtLogin;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27FA32AA2C13510E002F38E3 /* Project object */;
 }
