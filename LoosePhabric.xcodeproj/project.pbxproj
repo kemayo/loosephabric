@@ -14,6 +14,7 @@
 		27FA32C82C13510F002F38E3 /* LoosePhabricTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32C72C13510F002F38E3 /* LoosePhabricTests.swift */; };
 		27FA32D22C13510F002F38E3 /* LoosePhabricUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32D12C13510F002F38E3 /* LoosePhabricUITests.swift */; };
 		27FA32D42C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32D32C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift */; };
+		27FA32E42C1365A8002F38E3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32E32C1365A8002F38E3 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		27FA32CD2C13510F002F38E3 /* LoosePhabricUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoosePhabricUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27FA32D12C13510F002F38E3 /* LoosePhabricUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricUITests.swift; sourceTree = "<group>"; };
 		27FA32D32C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		27FA32E32C1365A8002F38E3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */,
+				27FA32E32C1365A8002F38E3 /* AppDelegate.swift */,
 				27FA32B72C13510E002F38E3 /* ContentView.swift */,
 				27FA32B92C13510F002F38E3 /* Assets.xcassets */,
 				27FA32BE2C13510F002F38E3 /* LoosePhabric.entitlements */,
@@ -259,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27FA32E42C1365A8002F38E3 /* AppDelegate.swift in Sources */,
 				27FA32B82C13510E002F38E3 /* ContentView.swift in Sources */,
 				27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */,
 			);
@@ -429,6 +433,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -456,6 +461,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

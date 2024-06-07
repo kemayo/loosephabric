@@ -9,9 +9,21 @@ import SwiftUI
 
 @main
 struct LoosePhabricApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        MenuBarExtra("T", systemImage: "tray.and.arrow.down") {
+            AppMenu()
         }
+    }
+}
+
+struct AppMenu: View {
+    var body: some View {
+        Label("LoosePhabric", systemImage: "book")
+        Divider()
+        Button("Quit") {
+            NSApplication.shared.terminate(nil)
+        }.keyboardShortcut("q")
     }
 }
