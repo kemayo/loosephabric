@@ -1,0 +1,586 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */; };
+		27FA32B82C13510E002F38E3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B72C13510E002F38E3 /* ContentView.swift */; };
+		27FA32BA2C13510F002F38E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27FA32B92C13510F002F38E3 /* Assets.xcassets */; };
+		27FA32BD2C13510F002F38E3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27FA32BC2C13510F002F38E3 /* Preview Assets.xcassets */; };
+		27FA32C82C13510F002F38E3 /* LoosePhabricTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32C72C13510F002F38E3 /* LoosePhabricTests.swift */; };
+		27FA32D22C13510F002F38E3 /* LoosePhabricUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32D12C13510F002F38E3 /* LoosePhabricUITests.swift */; };
+		27FA32D42C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32D32C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		27FA32C42C13510F002F38E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27FA32AA2C13510E002F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27FA32B12C13510E002F38E3;
+			remoteInfo = LoosePhabric;
+		};
+		27FA32CE2C13510F002F38E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27FA32AA2C13510E002F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27FA32B12C13510E002F38E3;
+			remoteInfo = LoosePhabric;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		27FA32B22C13510E002F38E3 /* LoosePhabric.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoosePhabric.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricApp.swift; sourceTree = "<group>"; };
+		27FA32B72C13510E002F38E3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		27FA32B92C13510F002F38E3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27FA32BC2C13510F002F38E3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		27FA32BE2C13510F002F38E3 /* LoosePhabric.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoosePhabric.entitlements; sourceTree = "<group>"; };
+		27FA32C32C13510F002F38E3 /* LoosePhabricTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoosePhabricTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		27FA32C72C13510F002F38E3 /* LoosePhabricTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricTests.swift; sourceTree = "<group>"; };
+		27FA32CD2C13510F002F38E3 /* LoosePhabricUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoosePhabricUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		27FA32D12C13510F002F38E3 /* LoosePhabricUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricUITests.swift; sourceTree = "<group>"; };
+		27FA32D32C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27FA32AF2C13510E002F38E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27FA32C02C13510F002F38E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27FA32CA2C13510F002F38E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		27FA32A92C13510E002F38E3 = {
+			isa = PBXGroup;
+			children = (
+				27FA32B42C13510E002F38E3 /* LoosePhabric */,
+				27FA32C62C13510F002F38E3 /* LoosePhabricTests */,
+				27FA32D02C13510F002F38E3 /* LoosePhabricUITests */,
+				27FA32B32C13510E002F38E3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		27FA32B32C13510E002F38E3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				27FA32B22C13510E002F38E3 /* LoosePhabric.app */,
+				27FA32C32C13510F002F38E3 /* LoosePhabricTests.xctest */,
+				27FA32CD2C13510F002F38E3 /* LoosePhabricUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		27FA32B42C13510E002F38E3 /* LoosePhabric */ = {
+			isa = PBXGroup;
+			children = (
+				27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */,
+				27FA32B72C13510E002F38E3 /* ContentView.swift */,
+				27FA32B92C13510F002F38E3 /* Assets.xcassets */,
+				27FA32BE2C13510F002F38E3 /* LoosePhabric.entitlements */,
+				27FA32BB2C13510F002F38E3 /* Preview Content */,
+			);
+			path = LoosePhabric;
+			sourceTree = "<group>";
+		};
+		27FA32BB2C13510F002F38E3 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				27FA32BC2C13510F002F38E3 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		27FA32C62C13510F002F38E3 /* LoosePhabricTests */ = {
+			isa = PBXGroup;
+			children = (
+				27FA32C72C13510F002F38E3 /* LoosePhabricTests.swift */,
+			);
+			path = LoosePhabricTests;
+			sourceTree = "<group>";
+		};
+		27FA32D02C13510F002F38E3 /* LoosePhabricUITests */ = {
+			isa = PBXGroup;
+			children = (
+				27FA32D12C13510F002F38E3 /* LoosePhabricUITests.swift */,
+				27FA32D32C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift */,
+			);
+			path = LoosePhabricUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		27FA32B12C13510E002F38E3 /* LoosePhabric */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27FA32D72C13510F002F38E3 /* Build configuration list for PBXNativeTarget "LoosePhabric" */;
+			buildPhases = (
+				27FA32AE2C13510E002F38E3 /* Sources */,
+				27FA32AF2C13510E002F38E3 /* Frameworks */,
+				27FA32B02C13510E002F38E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LoosePhabric;
+			productName = LoosePhabric;
+			productReference = 27FA32B22C13510E002F38E3 /* LoosePhabric.app */;
+			productType = "com.apple.product-type.application";
+		};
+		27FA32C22C13510F002F38E3 /* LoosePhabricTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27FA32DA2C13510F002F38E3 /* Build configuration list for PBXNativeTarget "LoosePhabricTests" */;
+			buildPhases = (
+				27FA32BF2C13510F002F38E3 /* Sources */,
+				27FA32C02C13510F002F38E3 /* Frameworks */,
+				27FA32C12C13510F002F38E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27FA32C52C13510F002F38E3 /* PBXTargetDependency */,
+			);
+			name = LoosePhabricTests;
+			productName = LoosePhabricTests;
+			productReference = 27FA32C32C13510F002F38E3 /* LoosePhabricTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		27FA32CC2C13510F002F38E3 /* LoosePhabricUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27FA32DD2C13510F002F38E3 /* Build configuration list for PBXNativeTarget "LoosePhabricUITests" */;
+			buildPhases = (
+				27FA32C92C13510F002F38E3 /* Sources */,
+				27FA32CA2C13510F002F38E3 /* Frameworks */,
+				27FA32CB2C13510F002F38E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27FA32CF2C13510F002F38E3 /* PBXTargetDependency */,
+			);
+			name = LoosePhabricUITests;
+			productName = LoosePhabricUITests;
+			productReference = 27FA32CD2C13510F002F38E3 /* LoosePhabricUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		27FA32AA2C13510E002F38E3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					27FA32B12C13510E002F38E3 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					27FA32C22C13510F002F38E3 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 27FA32B12C13510E002F38E3;
+					};
+					27FA32CC2C13510F002F38E3 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 27FA32B12C13510E002F38E3;
+					};
+				};
+			};
+			buildConfigurationList = 27FA32AD2C13510E002F38E3 /* Build configuration list for PBXProject "LoosePhabric" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 27FA32A92C13510E002F38E3;
+			productRefGroup = 27FA32B32C13510E002F38E3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				27FA32B12C13510E002F38E3 /* LoosePhabric */,
+				27FA32C22C13510F002F38E3 /* LoosePhabricTests */,
+				27FA32CC2C13510F002F38E3 /* LoosePhabricUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		27FA32B02C13510E002F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FA32BD2C13510F002F38E3 /* Preview Assets.xcassets in Resources */,
+				27FA32BA2C13510F002F38E3 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27FA32C12C13510F002F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27FA32CB2C13510F002F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		27FA32AE2C13510E002F38E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FA32B82C13510E002F38E3 /* ContentView.swift in Sources */,
+				27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27FA32BF2C13510F002F38E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FA32C82C13510F002F38E3 /* LoosePhabricTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27FA32C92C13510F002F38E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FA32D22C13510F002F38E3 /* LoosePhabricUITests.swift in Sources */,
+				27FA32D42C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27FA32C52C13510F002F38E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27FA32B12C13510E002F38E3 /* LoosePhabric */;
+			targetProxy = 27FA32C42C13510F002F38E3 /* PBXContainerItemProxy */;
+		};
+		27FA32CF2C13510F002F38E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27FA32B12C13510E002F38E3 /* LoosePhabric */;
+			targetProxy = 27FA32CE2C13510F002F38E3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		27FA32D52C13510F002F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		27FA32D62C13510F002F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		27FA32D82C13510F002F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LoosePhabric/LoosePhabric.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LoosePhabric/Preview Content\"";
+				DEVELOPMENT_TEAM = ZHVG2RH37J;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = davidlynch.org.LoosePhabric;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		27FA32D92C13510F002F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LoosePhabric/LoosePhabric.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LoosePhabric/Preview Content\"";
+				DEVELOPMENT_TEAM = ZHVG2RH37J;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = davidlynch.org.LoosePhabric;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		27FA32DB2C13510F002F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZHVG2RH37J;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = davidlynch.org.LoosePhabricTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LoosePhabric.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LoosePhabric";
+			};
+			name = Debug;
+		};
+		27FA32DC2C13510F002F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZHVG2RH37J;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = davidlynch.org.LoosePhabricTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LoosePhabric.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LoosePhabric";
+			};
+			name = Release;
+		};
+		27FA32DE2C13510F002F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZHVG2RH37J;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = davidlynch.org.LoosePhabricUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = LoosePhabric;
+			};
+			name = Debug;
+		};
+		27FA32DF2C13510F002F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZHVG2RH37J;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = davidlynch.org.LoosePhabricUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = LoosePhabric;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27FA32AD2C13510E002F38E3 /* Build configuration list for PBXProject "LoosePhabric" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27FA32D52C13510F002F38E3 /* Debug */,
+				27FA32D62C13510F002F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27FA32D72C13510F002F38E3 /* Build configuration list for PBXNativeTarget "LoosePhabric" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27FA32D82C13510F002F38E3 /* Debug */,
+				27FA32D92C13510F002F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27FA32DA2C13510F002F38E3 /* Build configuration list for PBXNativeTarget "LoosePhabricTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27FA32DB2C13510F002F38E3 /* Debug */,
+				27FA32DC2C13510F002F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27FA32DD2C13510F002F38E3 /* Build configuration list for PBXNativeTarget "LoosePhabricUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27FA32DE2C13510F002F38E3 /* Debug */,
+				27FA32DF2C13510F002F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 27FA32AA2C13510E002F38E3 /* Project object */;
+}
