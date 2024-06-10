@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		27A841A32C13989F00C6A303 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 27A841A22C13989F00C6A303 /* LaunchAtLogin */; };
 		27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */; };
-		27FA32B82C13510E002F38E3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B72C13510E002F38E3 /* ContentView.swift */; };
 		27FA32BA2C13510F002F38E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27FA32B92C13510F002F38E3 /* Assets.xcassets */; };
 		27FA32BD2C13510F002F38E3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27FA32BC2C13510F002F38E3 /* Preview Assets.xcassets */; };
 		27FA32C82C13510F002F38E3 /* LoosePhabricTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32C72C13510F002F38E3 /* LoosePhabricTests.swift */; };
@@ -38,7 +37,6 @@
 /* Begin PBXFileReference section */
 		27FA32B22C13510E002F38E3 /* LoosePhabric.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoosePhabric.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricApp.swift; sourceTree = "<group>"; };
-		27FA32B72C13510E002F38E3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		27FA32B92C13510F002F38E3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27FA32BC2C13510F002F38E3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		27FA32BE2C13510F002F38E3 /* LoosePhabric.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoosePhabric.entitlements; sourceTree = "<group>"; };
@@ -101,7 +99,6 @@
 			children = (
 				27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */,
 				27FA32E32C1365A8002F38E3 /* AppDelegate.swift */,
-				27FA32B72C13510E002F38E3 /* ContentView.swift */,
 				27FA32B92C13510F002F38E3 /* Assets.xcassets */,
 				27FA32BE2C13510F002F38E3 /* LoosePhabric.entitlements */,
 				27FA32BB2C13510F002F38E3 /* Preview Content */,
@@ -271,7 +268,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				27FA32E42C1365A8002F38E3 /* AppDelegate.swift in Sources */,
-				27FA32B82C13510E002F38E3 /* ContentView.swift in Sources */,
 				27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
