@@ -36,8 +36,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lastSetValue = nil
         lastInputValue = nil
         
-        if let match = plain.wholeMatch(of: /T\d+/) {
-            // T12345
+        if let match = plain.wholeMatch(of: /T\d+(?:#\d+)?/) {
+            // T12345 or T12345#54321
             setLinkToPasteboard(text: plain, URL: "https://phabricator.wikimedia.org/\(plain)")
         }
     }
