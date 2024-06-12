@@ -31,21 +31,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let items = pasteboard.pasteboardItems else { return }
         guard let item = items.first else { return }
         guard let plain = item.string(forType: .string) else { return }
-        
+
         if plain == lastInputValue || plain == lastSetValue { return }
         lastSetValue = nil
         lastInputValue = nil
-        
-        if  plain.wholeMatch(of: /T\d+(?:#\d+)?/) != nil {
+
+        if plain.wholeMatch(of: /T\d+(?:#\d+)?/) != nil {
             // T12345 or T12345#54321
-            fetchTitleAndSetLink(text: plain)
+            fetchPhabricatorTitleAndSetLink(text: plain)
+            lastInputValue = plain
         } else if let gerritURL = URL(string: plain), gerritURL.host == "gerrit.wikimedia.org" {
             fetchGerritTitleAndSetLink(url: gerritURL)
+            lastInputValue = plain
         }
-
     }
 
-    func fetchTitleAndSetLink(text: String) {
+    func fetchPhabricatorTitleAndSetLink(text: String) {
         let urlString: String
         urlString = "https://phabricator.wikimedia.org/\(text)"
 
@@ -129,30 +130,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         // Ensure the task ID is included and formatted correctly
         if let range = cleanedTitle.range(of: "T\\d+", options: .regularExpression) {
-            let taskID = cleanedTitle[range]
+            // let taskID = cleanedTitle[range]
             cleanedTitle = "\(cleanedTitle[range.upperBound...].trimmingCharacters(in: .whitespacesAndNewlines))"
         }
         return cleanedTitle
     }
+
     func setLinkToPasteboard(text: String, URL: String) {
-        lastInputValue = text
-        // Create an HTML string with a link
-        let htmlString = "<a href=\"\(URL)\">\(text)</a>"
-        // Convert HTML string to attributed string
-        guard let attributedString = try? NSAttributedString(data: htmlString.data(using: .utf8)!,
-                                                              options: [.documentType: NSAttributedString.DocumentType.html],
-                                                              documentAttributes: nil) else {
-            print("Error creating attributed string from HTML")
-            return
-        }
         pasteboard.clearContents()
-         do {
-             let htmlData = try attributedString.data(from: NSRange(location: 0, length: attributedString.length),
-                                                      documentAttributes: [.documentType: NSAttributedString.DocumentType.html])
-             pasteboard.setData(htmlData, forType: .html)
-         } catch {
-             print("Error setting pasteboard data", error)
-         }
+        // HTML because it's needed for pasting into Google Docs or similar locations
+        pasteboard.setString("<a href=\"\(URL)\">\(text)</a>", forType: .html)
+        let attributedString = NSAttributedString(string: text, attributes: [.link: URL])
+        do {
+            let rtf = try attributedString.data(from: NSMakeRange(0, attributedString.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
+            pasteboard.setData(rtf, forType: .rtf)
+        } catch {
+            print("Error setting pasteboard data", error)
+        }
         // Set plain text to pasteboard as a fallback
         pasteboard.setString(text, forType: .string)
         lastSetValue = text
