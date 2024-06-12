@@ -44,8 +44,15 @@ struct AppMenu: View {
 }
 
 struct SettingsView: View {
+    @AppStorage("expandTitles") private var expandTitles: Bool = true
+    @AppStorage("phabricator") private var phabricator: Bool = true
+    @AppStorage("gerrit") private var gerrit: Bool = true
+
     var body: some View {
         Form {
+            Toggle("Expand to include titles", isOn: $expandTitles)
+            Toggle("Watch for Phabricator", isOn: $phabricator)
+            Toggle("Watch for Gerrit", isOn: $gerrit)
             LaunchAtLogin.Toggle()
         }
         .padding(20)
