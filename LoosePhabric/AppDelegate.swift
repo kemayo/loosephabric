@@ -77,19 +77,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         return cleanedTitle
     }
-    
     func setLinkToPasteboard(text: String, URL: String) {
         lastInputValue = text
-        let attributedString = NSAttributedString(string: text, attributes: [.link: URL])
-        do {
-            let rtf = try attributedString.data(from: NSMakeRange(0, attributedString.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
-            pasteboard.clearContents()
-            pasteboard.setData(rtf, forType: .rtf)
-            pasteboard.setString(text, forType: .string)
-            lastSetValue = text
-        } catch {
-            print("Error setting pasteboard data", error)
+        // Create an HTML string with a link
+        let htmlString = "<a href=\"\(URL)\">\(text)</a>"
+        // Convert HTML string to attributed string
+        guard let attributedString = try? NSAttributedString(data: htmlString.data(using: .utf8)!,
+                                                              options: [.documentType: NSAttributedString.DocumentType.html],
+                                                              documentAttributes: nil) else {
+            print("Error creating attributed string from HTML")
+            return
         }
+        pasteboard.clearContents()
+         do {
+             let htmlData = try attributedString.data(from: NSRange(location: 0, length: attributedString.length),
+                                                      documentAttributes: [.documentType: NSAttributedString.DocumentType.html])
+             pasteboard.setData(htmlData, forType: .html)
+         } catch {
+             print("Error setting pasteboard data", error)
+         }
+        // Set plain text to pasteboard as a fallback
+        pasteboard.setString(text, forType: .string)
+        lastSetValue = text
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
