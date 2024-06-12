@@ -11,10 +11,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var timer: Timer!
     let pasteboard: NSPasteboard = .general
     var lastChangeCount: Int = 0
-    
+
     var lastInputValue: String?
     var lastSetValue: String?
-    
+
     let nc = NotificationCenter.default
     let publisher = NotificationCenter.default.publisher(for: Notification.Name("NSPasteboardDidChange"))
 
@@ -26,7 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
-    
+
     func onPasteboardChanged() {
         guard let items = pasteboard.pasteboardItems else { return }
         guard let item = items.first else { return }
@@ -38,8 +38,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if let match = plain.wholeMatch(of: /T\d+(?:#\d+)?/) {
             // T12345 or T12345#54321
-            setLinkToPasteboard(text: plain, URL: "https://phabricator.wikimedia.org/\(plain)")
+            fetchTitleAndSetLink(text: plain)
         }
+    }
+
+    func fetchTitleAndSetLink(text: String) {
+        let urlString: String
+        urlString = "https://phabricator.wikimedia.org/\(text)"
+
+        guard let url = URL(string: urlString) else { return }
+
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data, error == nil else { return }
+            if let htmlString = String(data: data, encoding: .utf8),
+               let titleRange = htmlString.range(of: "<title>")?.upperBound,
+               let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
+                var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+                title = self.cleanUpTitle(title: title)
+                DispatchQueue.main.async {
+                    self.setLinkToPasteboard(text: "\(text): \(title)", URL: urlString)
+                }
+            }
+        }
+
+        task.resume()
+    }
+
+    func cleanUpTitle(title: String) -> String {
+        // Remove the leading "⚓ " and any other unwanted parts from the title
+        var cleanedTitle = title
+        if cleanedTitle.hasPrefix("⚓ ") {
+            cleanedTitle.removeFirst(2)
+        }
+        // Ensure the task ID is included and formatted correctly
+        if let range = cleanedTitle.range(of: "T\\d+", options: .regularExpression) {
+            let taskID = cleanedTitle[range]
+            cleanedTitle = "\(cleanedTitle[range.upperBound...].trimmingCharacters(in: .whitespacesAndNewlines))"
+        }
+        return cleanedTitle
     }
     
     func setLinkToPasteboard(text: String, URL: String) {
