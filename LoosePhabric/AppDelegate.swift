@@ -36,10 +36,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lastSetValue = nil
         lastInputValue = nil
         
-        if let match = plain.wholeMatch(of: /T\d+(?:#\d+)?/) {
+        if  plain.wholeMatch(of: /T\d+(?:#\d+)?/) != nil {
             // T12345 or T12345#54321
             fetchTitleAndSetLink(text: plain)
+        } else if let gerritURL = URL(string: plain), gerritURL.host == "gerrit.wikimedia.org" {
+            fetchGerritTitleAndSetLink(url: gerritURL)
         }
+
     }
 
     func fetchTitleAndSetLink(text: String) {
@@ -58,6 +61,60 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: "\(text): \(title)", URL: urlString)
                 }
+            }
+        }
+
+        task.resume()
+    }
+
+    func fetchGerritTitleAndSetLink(url: URL) {
+        // Extract project name and change number from the URL path
+        let pathComponents = url.pathComponents
+        guard let cIndex = pathComponents.firstIndex(of: "c"),
+              let plusIndex = pathComponents.firstIndex(of: "+"),
+              cIndex < plusIndex else { return }
+
+        let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
+        let humanReadableProjectName = projectNameComponents.joined(separator: "/")
+        let projectName = projectNameComponents.joined(separator: "%2F")
+        let changeNumber = pathComponents[plusIndex+1]
+
+        // Construct the Gerrit API URL using the correct change ID format
+        let changeID = "\(projectName)~\(changeNumber)"
+        let apiURLString = "https://gerrit.wikimedia.org/r/changes/\(changeID)"
+        guard let apiURL = URL(string: apiURLString) else { return }
+
+        let task = URLSession.shared.dataTask(with: apiURL) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+
+            // Convert data to string and remove Gerrit's XSSI protection prefix
+            let dataString = String(data: data, encoding: .utf8)
+            guard let jsonString = dataString?.replacingOccurrences(of: ")]}'", with: "").trimmingCharacters(in: .whitespacesAndNewlines) else {
+                print("Error converting data to string")
+                return
+            }
+            guard let jsonData = jsonString.data(using: .utf8) else {
+                print("Error converting cleaned JSON string to Data")
+                return
+            }
+
+            // Debugging: Print the cleaned JSON string
+            print("Cleaned JSON string: \(jsonString)")
+
+            do {
+                if let jsonResponse = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+                   let subject = jsonResponse["subject"] as? String {
+                    let title = "\(subject) (\(humanReadableProjectName)-\(changeNumber))"
+                    DispatchQueue.main.async {
+                        self.setLinkToPasteboard(text: title, URL: url.absoluteString)
+                    }
+                }
+            } catch {
+                print("Error parsing JSON response: \(error)")
+                print("JSON string: \(jsonString)")
             }
         }
 
