@@ -46,15 +46,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func fetchPhabricatorTitleAndSetLink(text: String) -> Bool {
-        // T12345 or T12345#54321
+        // T12345 or T12345#54321 or https://phabricator.wikimedia.org/T12345#54321
         if !UserDefaults.standard.bool(forKey: "phabricator") {
             return false
         }
-        if text.wholeMatch(of: /T\d+(?:#\d+)?/) == nil {
-            return false
-        }
+        let phabTicketPattern = /T\d+(?:#\d+)?/
         let urlString: String
-        urlString = "https://phabricator.wikimedia.org/\(text)"
+        let ticket: String
+        if (text.wholeMatch(of: phabTicketPattern) != nil) {
+            urlString = "https://phabricator.wikimedia.org/\(text)"
+            ticket = text
+        } else if let url = URL(string: text), url.host == "phabricator.wikimedia.org" && url.pathComponents.count == 2 && (url.lastPathComponent.wholeMatch(of: phabTicketPattern) != nil) {
+            // Note to self: pathComponents will be ["/", "T12345"]
+            urlString = url.absoluteString
+            if url.fragment != nil && url.fragment!.isNumeric {
+                ticket = url.lastPathComponent + "#" + url.fragment!
+            } else {
+                ticket = url.lastPathComponent
+            }
+        } else {
+            return false;
+        }
 
         if UserDefaults.standard.bool(forKey: "expandTitles") {
             guard let url = URL(string: urlString) else { return false }
@@ -64,16 +76,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                    let titleRange = htmlString.range(of: "<title>")?.upperBound,
                    let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
                     var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
-                    title = self.cleanUpTitle(title: title)
+                    title = self.cleanUpPhabricatorTitle(title: title)
                     DispatchQueue.main.async {
-                        self.setLinkToPasteboard(text: "\(text): \(title)", url: urlString)
+                        self.setLinkToPasteboard(text: "\(ticket): \(title)", url: urlString)
                     }
                 }
             }
 
             task.resume()
         } else {
-            setLinkToPasteboard(text: text, url: urlString)
+            setLinkToPasteboard(text: ticket, url: urlString)
         }
         return true
     }
@@ -146,7 +158,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 
-    func cleanUpTitle(title: String) -> String {
+    func cleanUpPhabricatorTitle(title: String) -> String {
         // Remove the leading "⚓ " and any other unwanted parts from the title
         var cleanedTitle = title
         if cleanedTitle.hasPrefix("⚓ ") {
@@ -195,6 +207,13 @@ extension String {
         ], documentAttributes: nil).string
 
         return decoded ?? self
+    }
+
+    var isNumeric: Bool {
+        let digits = CharacterSet.decimalDigits
+        let stringSet = CharacterSet(charactersIn: self)
+
+        return digits.isSuperset(of: stringSet)
     }
 }
 
