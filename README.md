@@ -20,3 +20,13 @@ If you copy text that looks like `T{some number}`, LoosePhabric will make a requ
 
 If you copy the full Gerrit URL, LoosePhabric will make an API request to Gerrit to fetch the patch title, and update your clipboard with a nicely formatted HTML link.
 
+## Tips
+
+* If you copy the same item a second time in a row, all attempted transformations will be skipped.
+* Pasting-without-formatting (generally: `ctrl/cmd + shift + c`) should paste the original text you copied.
+* You can turn off expanding to include titles in the settings.
+
+
+## Third-party content
+
+This uses the [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin-modern) package.
