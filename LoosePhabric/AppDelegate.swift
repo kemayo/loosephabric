@@ -157,7 +157,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // let taskID = cleanedTitle[range]
             cleanedTitle = "\(cleanedTitle[range.upperBound...].trimmingCharacters(in: .whitespacesAndNewlines))"
         }
-        return cleanedTitle
+        return cleanedTitle.htmlDecoded
     }
 
     func setLinkToPasteboard(text: String, url: String) {
@@ -186,3 +186,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         timer.invalidate()
     }
 }
+
+extension String {
+    var htmlDecoded: String {
+        let decoded = try? NSAttributedString(data: Data(utf8), options: [
+            .documentType: NSAttributedString.DocumentType.html,
+            .characterEncoding: String.Encoding.utf8.rawValue
+        ], documentAttributes: nil).string
+
+        return decoded ?? self
+    }
+}
+
