@@ -39,15 +39,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if plain == lastInputValue || plain == lastSetValue { return }
         lastSetValue = nil
-        lastInputValue = nil
+        lastInputValue = plain
 
         if plain.wholeMatch(of: /T\d+(?:#\d+)?/) != nil && UserDefaults.standard.bool(forKey: "phabricator") {
             // T12345 or T12345#54321
             fetchPhabricatorTitleAndSetLink(text: plain)
-            lastInputValue = plain
         } else if let gerritURL = URL(string: plain), gerritURL.host == "gerrit.wikimedia.org" && UserDefaults.standard.bool(forKey: "gerrit") {
             fetchGerritTitleAndSetLink(url: gerritURL)
-            lastInputValue = plain
         }
     }
 
@@ -150,6 +148,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func setLinkToPasteboard(text: String, URL: String) {
+        // We can be confident that the original exists, because it's checked in onPasteboardChanged
+        let original = pasteboard.pasteboardItems!.first!.string(forType: .string) ?? text
         pasteboard.clearContents()
         // HTML because it's needed for pasting into Google Docs or similar locations
         pasteboard.setString("<a href=\"\(URL)\">\(text)</a>", forType: .html)
@@ -160,9 +160,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } catch {
             print("Error setting rtf pasteboard data", error)
         }
-        // Set plain text to pasteboard as a fallback
-        pasteboard.setString(text, forType: .string)
-        // So that pastes into browser location bars works
+        // Set the original plain text to pasteboard as a fallback
+        // If we're transforming from a URL, this will mean it still works to paste into browser URL bars
+        pasteboard.setString(original, forType: .string)
+        // For completeness:
         pasteboard.setString(URL, forType: .URL)
         lastSetValue = text
     }
