@@ -66,14 +66,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
                     title = self.cleanUpTitle(title: title)
                     DispatchQueue.main.async {
-                        self.setLinkToPasteboard(text: "\(text): \(title)", URL: urlString)
+                        self.setLinkToPasteboard(text: "\(text): \(title)", url: urlString)
                     }
                 }
             }
 
             task.resume()
         } else {
-            setLinkToPasteboard(text: text, URL: urlString)
+            setLinkToPasteboard(text: text, url: urlString)
         }
         return true
     }
@@ -127,10 +127,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                 do {
                     if let jsonResponse = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
-                       let subject = jsonResponse["subject"] as? String {
+                        let subject = jsonResponse["subject"] as? String {
                         let title = "\(subject) (\(humanReadableProjectName)-\(changeNumber))"
                         DispatchQueue.main.async {
-                            self.setLinkToPasteboard(text: title, URL: url.absoluteString)
+                            self.setLinkToPasteboard(text: title, url: url.absoluteString)
                         }
                     }
                 } catch {
@@ -141,7 +141,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             task.resume()
         } else {
-            self.setLinkToPasteboard(text: "\(humanReadableProjectName)~\(changeNumber)", URL: url.absoluteString)
+            self.setLinkToPasteboard(text: "\(humanReadableProjectName)~\(changeNumber)", url: url.absoluteString)
         }
         return true
     }
@@ -160,13 +160,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return cleanedTitle
     }
 
-    func setLinkToPasteboard(text: String, URL: String) {
+    func setLinkToPasteboard(text: String, url: String) {
         // We can be confident that the original exists, because it's checked in onPasteboardChanged
         let original = pasteboard.pasteboardItems!.first!.string(forType: .string) ?? text
         pasteboard.clearContents()
         // HTML because it's needed for pasting into Google Docs or similar locations
-        pasteboard.setString("<a href=\"\(URL)\">\(text)</a>", forType: .html)
-        let attributedString = NSAttributedString(string: text, attributes: [.link: URL])
+        pasteboard.setString("<a href=\"\(url)\">\(text)</a>", forType: .html)
+        let attributedString = NSAttributedString(string: text, attributes: [.link: url])
         do {
             let rtf = try attributedString.data(from: NSMakeRange(0, attributedString.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
             pasteboard.setData(rtf, forType: .rtf)
@@ -177,7 +177,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // If we're transforming from a URL, this will mean it still works to paste into browser URL bars
         pasteboard.setString(original, forType: .string)
         // For completeness:
-        pasteboard.setString(URL, forType: .URL)
+        pasteboard.setString(url, forType: .URL)
         lastSetValue = text
     }
 
