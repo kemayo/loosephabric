@@ -41,20 +41,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lastSetValue = nil
         lastInputValue = plain
 
-        if plain.wholeMatch(of: /T\d+(?:#\d+)?/) != nil && UserDefaults.standard.bool(forKey: "phabricator") {
-            // T12345 or T12345#54321
-            fetchPhabricatorTitleAndSetLink(text: plain)
-        } else if let gerritURL = URL(string: plain), gerritURL.host == "gerrit.wikimedia.org" && UserDefaults.standard.bool(forKey: "gerrit") {
-            fetchGerritTitleAndSetLink(url: gerritURL)
-        }
+        if fetchPhabricatorTitleAndSetLink(text: plain) { return }
+        if fetchGerritTitleAndSetLink(text: plain) { return }
     }
 
-    func fetchPhabricatorTitleAndSetLink(text: String) {
+    func fetchPhabricatorTitleAndSetLink(text: String) -> Bool {
+        // T12345 or T12345#54321
+        if !UserDefaults.standard.bool(forKey: "phabricator") {
+            return false
+        }
+        if text.wholeMatch(of: /T\d+(?:#\d+)?/) == nil {
+            return false
+        }
         let urlString: String
         urlString = "https://phabricator.wikimedia.org/\(text)"
 
         if UserDefaults.standard.bool(forKey: "expandTitles") {
-            guard let url = URL(string: urlString) else { return }
+            guard let url = URL(string: urlString) else { return false }
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 guard let data = data, error == nil else { return }
                 if let htmlString = String(data: data, encoding: .utf8),
@@ -72,15 +75,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             setLinkToPasteboard(text: text, URL: urlString)
         }
+        return true
     }
 
-    func fetchGerritTitleAndSetLink(url: URL) {
+    func fetchGerritTitleAndSetLink(text: String) -> Bool {
         // Extract project name and change number from the URL path
         // e.g. https://gerrit.wikimedia.org/r/c/mediawiki/extensions/VisualEditor/+/1010703/20
+        if !UserDefaults.standard.bool(forKey: "gerrit") {
+            return false
+        }
+        guard let url = URL(string: text) else { return false }
+        if url.host != "gerrit.wikimedia.org" {
+            return false
+        }
+
         let pathComponents = url.pathComponents
         guard let cIndex = pathComponents.firstIndex(of: "c"),
               let plusIndex = pathComponents.firstIndex(of: "+"),
-              cIndex < plusIndex else { return }
+              cIndex < plusIndex else { return false }
 
         let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
         let humanReadableProjectName = projectNameComponents.joined(separator: "/")
@@ -91,7 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if UserDefaults.standard.bool(forKey: "expandTitles") {
             // Construct the Gerrit API URL using the correct change ID format
             let apiURLString = "https://gerrit.wikimedia.org/r/changes/\(changeID)"
-            guard let apiURL = URL(string: apiURLString) else { return }
+            guard let apiURL = URL(string: apiURLString) else { return false }
 
             let task = URLSession.shared.dataTask(with: apiURL) { (data, response, error) in
                 guard let data = data, error == nil else {
@@ -131,6 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             self.setLinkToPasteboard(text: "\(humanReadableProjectName)~\(changeNumber)", URL: url.absoluteString)
         }
+        return true
     }
 
     func cleanUpTitle(title: String) -> String {
