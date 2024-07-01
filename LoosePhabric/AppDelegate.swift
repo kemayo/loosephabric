@@ -91,31 +91,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func fetchGerritTitleAndSetLink(text: String) -> Bool {
-        // Extract project name and change number from the URL path
+        // Extract project name and change number from the input
         // e.g. https://gerrit.wikimedia.org/r/c/mediawiki/extensions/VisualEditor/+/1010703/20
         // or https://gerrit.wikimedia.org/r/1047469
+        // or If317f991a4782bbc980d3923178799e1c67ebaa8
         if !UserDefaults.standard.bool(forKey: "gerrit") {
             return false
         }
-        guard let url = URL(string: text) else { return false }
-        if url.host != "gerrit.wikimedia.org" {
-            return false
-        }
 
-        let pathComponents = url.pathComponents
         let changeID: String
+        let url: URL
 
-        if url.path().wholeMatch(of: /\/r\/\d+/) != nil {
-            // e.g. https://gerrit.wikimedia.org/r/1047469
-            changeID = pathComponents.last!
+        if text.wholeMatch(of: /I[a-fA-F0-9]{40}/) != nil {
+            // This is just a Change-Id like If317f991a4782bbc980d3923178799e1c67ebaa8
+            changeID = text
+            url = URL(string: "https://gerrit.wikimedia.org/r/q/\(changeID)")!
         } else {
-            guard let cIndex = pathComponents.firstIndex(of: "c"),
-                  let plusIndex = pathComponents.firstIndex(of: "+"),
-                  cIndex < plusIndex else { return false }
-            let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
-            let projectName = projectNameComponents.joined(separator: "%2F")
-            let changeNumber = pathComponents[plusIndex+1]
-            changeID = "\(projectName)~\(changeNumber)"
+            guard let maybeurl = URL(string: text) else { return false }
+            url = maybeurl
+            if url.host != "gerrit.wikimedia.org" {
+                return false
+            }
+
+            let pathComponents = url.pathComponents
+
+            if url.path().wholeMatch(of: /\/r\/\d+/) != nil {
+                // e.g. https://gerrit.wikimedia.org/r/1047469
+                changeID = pathComponents.last!
+            } else {
+                guard let cIndex = pathComponents.firstIndex(of: "c"),
+                      let plusIndex = pathComponents.firstIndex(of: "+"),
+                      cIndex < plusIndex else { return false }
+                let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
+                let projectName = projectNameComponents.joined(separator: "%2F")
+                let changeNumber = pathComponents[plusIndex+1]
+                changeID = "\(projectName)~\(changeNumber)"
+            }
         }
 
         if UserDefaults.standard.bool(forKey: "expandTitles") {
