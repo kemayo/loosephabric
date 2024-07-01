@@ -93,6 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func fetchGerritTitleAndSetLink(text: String) -> Bool {
         // Extract project name and change number from the URL path
         // e.g. https://gerrit.wikimedia.org/r/c/mediawiki/extensions/VisualEditor/+/1010703/20
+        // or https://gerrit.wikimedia.org/r/1047469
         if !UserDefaults.standard.bool(forKey: "gerrit") {
             return false
         }
@@ -102,15 +103,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         let pathComponents = url.pathComponents
-        guard let cIndex = pathComponents.firstIndex(of: "c"),
-              let plusIndex = pathComponents.firstIndex(of: "+"),
-              cIndex < plusIndex else { return false }
+        let changeID: String
 
-        let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
-        let humanReadableProjectName = projectNameComponents.joined(separator: "/")
-        let projectName = projectNameComponents.joined(separator: "%2F")
-        let changeNumber = pathComponents[plusIndex+1]
-        let changeID = "\(projectName)~\(changeNumber)"
+        if url.path().wholeMatch(of: /\/r\/\d+/) != nil {
+            // e.g. https://gerrit.wikimedia.org/r/1047469
+            changeID = pathComponents.last!
+        } else {
+            guard let cIndex = pathComponents.firstIndex(of: "c"),
+                  let plusIndex = pathComponents.firstIndex(of: "+"),
+                  cIndex < plusIndex else { return false }
+            let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
+            let projectName = projectNameComponents.joined(separator: "%2F")
+            let changeNumber = pathComponents[plusIndex+1]
+            changeID = "\(projectName)~\(changeNumber)"
+        }
 
         if UserDefaults.standard.bool(forKey: "expandTitles") {
             // Construct the Gerrit API URL using the correct change ID format
@@ -139,10 +145,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                 do {
                     if let jsonResponse = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
-                        let subject = jsonResponse["subject"] as? String {
-                        let title = "\(subject) (\(humanReadableProjectName)-\(changeNumber))"
+                        let subject = jsonResponse["subject"] as? String,
+                        let officialID = jsonResponse["id"] as? String
+                    {
+                        let title = "\(subject) (\(officialID))"
                         DispatchQueue.main.async {
-                            self.setLinkToPasteboard(text: title, url: url.absoluteString)
+                            self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: url.absoluteString)
                         }
                     }
                 } catch {
@@ -153,7 +161,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             task.resume()
         } else {
-            self.setLinkToPasteboard(text: "\(humanReadableProjectName)~\(changeNumber)", url: url.absoluteString)
+            self.setLinkToPasteboard(text: changeID.removingPercentEncoding ?? changeID, url: url.absoluteString)
         }
         return true
     }
