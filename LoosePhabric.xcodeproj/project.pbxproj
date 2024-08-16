@@ -35,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2753B9E02C6FA27C000762F3 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		27FA32B22C13510E002F38E3 /* LoosePhabric.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoosePhabric.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricApp.swift; sourceTree = "<group>"; };
 		27FA32B92C13510F002F38E3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 		27FA32A92C13510E002F38E3 = {
 			isa = PBXGroup;
 			children = (
+				2753B9E02C6FA27C000762F3 /* Makefile */,
 				27FA32B42C13510E002F38E3 /* LoosePhabric */,
 				27FA32C62C13510F002F38E3 /* LoosePhabricTests */,
 				27FA32D02C13510F002F38E3 /* LoosePhabricUITests */,
