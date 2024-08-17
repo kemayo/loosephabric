@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2701A0862C70F7440037376B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2701A0852C70F7440037376B /* SettingsView.swift */; };
+		2701A0882C70F7AA0037376B /* UpdaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2701A0872C70F7AA0037376B /* UpdaterView.swift */; };
 		2753B9E42C6FD234000762F3 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 2753B9E32C6FD234000762F3 /* Sparkle */; };
 		27A841A32C13989F00C6A303 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 27A841A22C13989F00C6A303 /* LaunchAtLogin */; };
 		27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */; };
@@ -36,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2701A0852C70F7440037376B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2701A0872C70F7AA0037376B /* UpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterView.swift; sourceTree = "<group>"; };
 		2753B9E02C6FA27C000762F3 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		2753B9E52C6FD910000762F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		27FA32B22C13510E002F38E3 /* LoosePhabric.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoosePhabric.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +108,8 @@
 			children = (
 				2753B9E52C6FD910000762F3 /* Info.plist */,
 				27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */,
+				2701A0872C70F7AA0037376B /* UpdaterView.swift */,
+				2701A0852C70F7440037376B /* SettingsView.swift */,
 				27FA32E32C1365A8002F38E3 /* AppDelegate.swift */,
 				27FA32B92C13510F002F38E3 /* Assets.xcassets */,
 				27FA32BE2C13510F002F38E3 /* LoosePhabric.entitlements */,
@@ -275,6 +281,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2701A0882C70F7AA0037376B /* UpdaterView.swift in Sources */,
+				2701A0862C70F7440037376B /* SettingsView.swift in Sources */,
 				27FA32E42C1365A8002F38E3 /* AppDelegate.swift in Sources */,
 				27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */,
 			);
