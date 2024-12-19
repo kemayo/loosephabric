@@ -1,5 +1,6 @@
 ## User settings
 xcuserdata/
 
+build/
 LoosePhabric.xcarchive
 
