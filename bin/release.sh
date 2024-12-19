@@ -24,7 +24,7 @@ APPCASTFILE=$2
 [ -f "$ZIPFILE" ] || die "$ZIPFILE doesn't exist"
 [ -f "$APPCASTFILE" ] || die "$APPCASTFILE doesn't exist"
 
-BUILDSETTINGS=$(xcodebuild -project ../LoosePhabric/LoosePhabric.xcodeproj -target LoosePhabric -showBuildSettings 2>/dev/null)
+BUILDSETTINGS=$(xcodebuild -project ../LoosePhabric/LoosePhabric.xcodeproj -scheme LoosePhabric -showBuildSettings 2>/dev/null)
 
 DERIVED=$(realpath $(echo "$BUILDSETTINGS" | grep -m 1 "\bSYMROOT" | sed -nr 's/^.+ = (.+)$/\1/p')/../../)
 
