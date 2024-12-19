@@ -12,9 +12,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let pasteboard: NSPasteboard = .general
     var lastChangeCount: Int = 0
 
-    var lastInputValue: String?
-    var lastSetValue: String?
-
     let nc = NotificationCenter.default
     let publisher = NotificationCenter.default.publisher(for: Notification.Name("NSPasteboardDidChange"))
 
@@ -36,10 +33,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let items = pasteboard.pasteboardItems else { return }
         guard let item = items.first else { return }
         guard let plain = item.string(forType: .string) else { return }
-
-        if plain == lastInputValue || plain == lastSetValue { return }
-        lastSetValue = nil
-        lastInputValue = plain
 
         if fetchPhabricatorTitleAndSetLink(text: plain) { return }
         if fetchGerritTitleAndSetLink(text: plain) { return }
@@ -209,7 +202,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         pasteboard.setString(original, forType: .string)
         // For completeness:
         pasteboard.setString(url, forType: .URL)
-        lastSetValue = text
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
