@@ -3,6 +3,8 @@
 # This is to generate https://github.com/kemayo/loosephabric/appcast.xml
 # For the URLs to line up, you *have* to create the release as `v[whatever-your-version-in-xcode-is]`
 
+# TODO: adjust this to go entirely from the Info.plist inside the app zip?
+
 # ditto -c -k --sequesterRsrc --keepParent LoosePhabric.app LoosePhabric-v1.zip
 
 # set -x
@@ -41,6 +43,7 @@ SPARKLE=$DERIVED/SourcePackages/artifacts/sparkle/Sparkle/bin
 # I based this on https://github.com/lwouis/alt-tab-macos/blob/master/scripts/update_appcast.sh
 
 version=$(echo "$BUILDSETTINGS" | grep -m 1 "\bMARKETING_VERSION =" | sed -nr 's/^.+ = (.+)$/\1/p')
+internalVersion=$(echo "$BUILDSETTINGS" | grep -m 1 "\bCURRENT_PROJECT_VERSION =" | sed -nr 's/^.+ = (.+)$/\1/p')
 minimumSystemVersion=$(echo "$BUILDSETTINGS" | grep -m 1 "\bMACOSX_DEPLOYMENT_TARGET =" | sed -nr 's/^.+ = (.+)$/\1/p')
 date="$(date +'%a, %d %b %Y %H:%M:%S %z')"
 
@@ -50,14 +53,14 @@ echo "Signed release: $signature"
 
 echo "
     <item>
-      <title>Version $version</title>
+      <title>$version</title>
       <pubDate>$date</pubDate>
+      <sparkle:version>$internalVersion</sparkle:version>
+      <sparkle:shortVersionString>$version</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>$minimumSystemVersion</sparkle:minimumSystemVersion>
       <sparkle:releaseNotesLink>$BASEURL/releases/tag/v$version</sparkle:releaseNotesLink>
       <enclosure
         url=\"$BASEURL/releases/download/v$version/$(basename $ZIPFILE)\"
-        sparkle:version=\"$version\"
-        sparkle:shortVersionString=\"$version\"
         $signature
         type=\"application/octet-stream\"/>
     </item>
