@@ -188,9 +188,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func setLinkToPasteboard(text: String, url: String) {
         // We can be confident that the original exists, because it's checked in onPasteboardChanged
         let original = pasteboard.pasteboardItems!.first!.string(forType: .string) ?? text
+        var htmlSafeText = text
+        if !htmlSafeText.contains("&[^;]+;") {
+            htmlSafeText = htmlSafeText.replacingOccurrences(of: "<", with: "&lt;")
+                .replacingOccurrences(of:">", with: "&gt;");
+            print("Cleaned text", htmlSafeText)
+        }
         pasteboard.clearContents()
         // HTML because it's needed for pasting into Google Docs or similar locations
-        pasteboard.setString("<a href=\"\(url)\">\(text)</a>", forType: .html)
+        pasteboard.setString("<a href=\"\(url)\">\(htmlSafeText)</a>", forType: .html)
+        // RTF
         let attributedString = NSAttributedString(string: text, attributes: [.link: url])
         do {
             let rtf = try attributedString.data(from: NSMakeRange(0, attributedString.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
