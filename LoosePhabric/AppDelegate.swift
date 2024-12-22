@@ -23,6 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ])
         timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { (t) in
             if self.lastChangeCount != self.pasteboard.changeCount {
+                print("pasteboard changed", self.lastChangeCount, self.pasteboard.changeCount)
                 self.lastChangeCount = self.pasteboard.changeCount
                 self.onPasteboardChanged()
             }
@@ -202,6 +203,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         pasteboard.setString(original, forType: .string)
         // For completeness:
         pasteboard.setString(url, forType: .URL)
+
+        // Avoid looping
+        self.lastChangeCount += 1
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
