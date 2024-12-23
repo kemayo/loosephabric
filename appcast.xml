@@ -8,14 +8,14 @@
 
     <item>
       <title>0.5</title>
-      <pubDate>Sun, 22 Dec 2024 19:35:23 -0600</pubDate>
+      <pubDate>Sun, 22 Dec 2024 19:46:40 -0600</pubDate>
       <sparkle:version>9</sparkle:version>
       <sparkle:shortVersionString>0.5</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
       <sparkle:releaseNotesLink>https://github.com/kemayo/loosephabric/releases/tag/v0.5</sparkle:releaseNotesLink>
       <enclosure
         url="https://github.com/kemayo/loosephabric/releases/download/v0.5/LoosePhabric-v0.5.zip"
-        sparkle:edSignature="5pxRCk2nCjzw4rDsfAXoiCAjWRWuxHVXjOR0Nb34oFVZhV7BxsbAE0eEfT8zJ7xxIKaWyVA2qVNJ5ZbLTurtDg==" length="1437337"
+        sparkle:edSignature="0nrz7wq7SUeyVAjBjtAv2oGXYrJEE8E5yisH7vAWNkJj62nkQWFD4eANLtk+yMtLbd8xeWClUnshJiuB/GZcCg==" length="1437377"
         type="application/octet-stream"/>
     </item>
 
