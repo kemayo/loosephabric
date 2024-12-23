@@ -20,6 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             "expandTitles": true,
             "phabricator": true,
             "gerrit": true,
+            "gitlab": true,
         ])
         timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { (t) in
             if self.lastChangeCount != self.pasteboard.changeCount {
@@ -37,6 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if fetchPhabricatorTitleAndSetLink(text: plain) { return }
         if fetchGerritTitleAndSetLink(text: plain) { return }
+        if fetchGitlabTitleAndSetLink(text: plain) { return }
     }
 
     func fetchPhabricatorTitleAndSetLink(text: String) -> Bool {
@@ -167,6 +169,50 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             task.resume()
         } else {
             self.setLinkToPasteboard(text: changeID.removingPercentEncoding ?? changeID, url: url.absoluteString)
+        }
+        return true
+    }
+
+    func fetchGitlabTitleAndSetLink(text: String) -> Bool {
+        // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/253
+        if !UserDefaults.standard.bool(forKey: "gitlab") {
+            return false
+        }
+        let mergePattern = #//repos/mediawiki/(?<repo>.+)/-/merge_requests/(?<reqid>\d+)/#
+        let urlString: String
+        let output: String
+        if let url = URL(string: text), url.host == "gitlab.wikimedia.org" {
+            if let match = url.path().wholeMatch(of: mergePattern) {
+                // Note to self: pathComponents will be ["/", "T12345"]
+                urlString = url.absoluteString
+                output = "\(match.repo)~\(match.reqid)"
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+
+        if UserDefaults.standard.bool(forKey: "expandTitles") {
+            guard let url = URL(string: urlString) else { return false }
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data, error == nil else { return }
+                if let htmlString = String(data: data, encoding: .utf8),
+                   let titleRange = htmlString.range(of: "<title>")?.upperBound,
+                   let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
+                    var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines).htmlDecoded
+                    if let match = title.wholeMatch(of: #/(?<title>.+) \(!\d+\) ·.+/#) {
+                        title = "\(match.title)"
+                    }
+                    DispatchQueue.main.async {
+                        self.setLinkToPasteboard(text: "\(title) (\(output))", url: urlString)
+                    }
+                }
+            }
+
+            task.resume()
+        } else {
+            setLinkToPasteboard(text: output, url: urlString)
         }
         return true
     }

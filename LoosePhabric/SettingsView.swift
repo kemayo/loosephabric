@@ -15,6 +15,7 @@ struct SettingsView: View {
     @AppStorage("expandTitles") private var expandTitles: Bool = true
     @AppStorage("phabricator") private var phabricator: Bool = true
     @AppStorage("gerrit") private var gerrit: Bool = true
+    @AppStorage("gitlab") private var gitlab: Bool = true
 
     let updater: SPUUpdater
 
@@ -23,6 +24,7 @@ struct SettingsView: View {
             Toggle("Expand to include titles", isOn: $expandTitles)
             Toggle("Watch for Phabricator", isOn: $phabricator)
             Toggle("Watch for Gerrit", isOn: $gerrit)
+            Toggle("Watch for Gitlab", isOn: $gitlab)
             LaunchAtLogin.Toggle()
 
             UpdaterSettingsView(updater: updater)
