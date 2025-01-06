@@ -29,8 +29,9 @@ struct LoosePhabricApp: App {
 
 struct AppMenu: View {
     let updater: SPUUpdater
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     var body: some View {
-        Label("LoosePhabric", systemImage: "book")
+        Label("LoosePhabric \(appVersion ?? "")", systemImage: "book")
         if #available(macOS 14.0, *) {
             SettingsLink()
         } else {
