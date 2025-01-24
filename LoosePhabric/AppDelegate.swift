@@ -43,13 +43,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if !UserDefaults.standard.bool(forKey: "phabricator") {
             return false
         }
-        let phabTicketPattern = /T\d+(?:#\d+)?/
+        // T tickets, P pastes, D code reviews, M mocks, E events, F files
+        // rABCD for repositories also exists
+        // .ignoresCase() could make sense
+        let phabObjectPattern = /[TPDMEF]\d+(?:#\d+)?/
         let urlString: String
         let ticket: String
-        if (text.wholeMatch(of: phabTicketPattern) != nil) {
+        if (text.wholeMatch(of: phabObjectPattern) != nil) {
             urlString = "https://phabricator.wikimedia.org/\(text)"
             ticket = text
-        } else if let url = URL(string: text), url.host == "phabricator.wikimedia.org" && url.pathComponents.count == 2 && (url.lastPathComponent.wholeMatch(of: phabTicketPattern) != nil) {
+        } else if let url = URL(string: text), url.host == "phabricator.wikimedia.org" && url.pathComponents.count == 2 && (url.lastPathComponent.wholeMatch(of: phabObjectPattern) != nil) {
             // Note to self: pathComponents will be ["/", "T12345"]
             urlString = url.absoluteString
             if url.fragment != nil && url.fragment!.isNumeric {
