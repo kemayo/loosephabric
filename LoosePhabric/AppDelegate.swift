@@ -48,56 +48,85 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // .ignoresCase() could make sense
         let phabObjectPattern = /[TPDMEF]\d+(?:#\d+)?/
         let urlString: String
-        let ticket: String
+        let objectName: String
         if (text.wholeMatch(of: phabObjectPattern) != nil) {
             urlString = "https://phabricator.wikimedia.org/\(text)"
-            ticket = text
+            objectName = text
         } else if let url = URL(string: text), url.host == "phabricator.wikimedia.org" && url.pathComponents.count == 2 && (url.lastPathComponent.wholeMatch(of: phabObjectPattern) != nil) {
             // Note to self: pathComponents will be ["/", "T12345"]
             urlString = url.absoluteString
             if url.fragment != nil && url.fragment!.isNumeric {
-                ticket = url.lastPathComponent + "#" + url.fragment!
+                objectName = url.lastPathComponent + "#" + url.fragment!
             } else {
-                ticket = url.lastPathComponent
+                objectName = url.lastPathComponent
             }
         } else {
             return false;
         }
 
         if UserDefaults.standard.bool(forKey: "expandTitles") {
-            guard let url = URL(string: urlString) else { return false }
+            // First we're going to try using phabroxy
+            guard let url = URL(string: "https://phabroxy.toolforge.org/lookup/\(objectName)") else { return false }
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 guard let data = data, error == nil else {
                     print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                    self.fallbackPhabricatorFetch(objectName: objectName, urlString: urlString)
                     return
                 }
                 guard let httpResponse = response as? HTTPURLResponse,
                       (200...299).contains(httpResponse.statusCode) else {
                     print("Non-200 status response")
+                    self.fallbackPhabricatorFetch(objectName: objectName, urlString: urlString)
                     return
                 }
-
-                if let htmlString = String(data: data, encoding: .utf8),
-                   let titleRange = htmlString.range(of: "<title>")?.upperBound,
-                   let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
-                    var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
-                    title = self.cleanUpPhabricatorTitle(title: title)
-                    // Specific guard against a 404/security issue:
-                    if title == "Login" && htmlString.contains(/class="auth-custom-message"/) {
-                        print("Page required login")
-                        return
-                    }
+                print("API response: \(String(data: data, encoding: .utf8) ?? "UNENCODABLE")")
+                if let decoded = try? JSONDecoder().decode(PhabroxyResponse.self, from: data) {
                     DispatchQueue.main.async {
-                        self.setLinkToPasteboard(text: "\(ticket): \(title)", url: urlString)
+                        self.setLinkToPasteboard(text: decoded.fullName, url: decoded.uri)
                     }
+                } else {
+                    self.fallbackPhabricatorFetch(objectName: objectName, urlString: urlString)
                 }
             }
 
             task.resume()
         } else {
-            setLinkToPasteboard(text: ticket, url: urlString)
+            setLinkToPasteboard(text: objectName, url: urlString)
         }
         return true
+    }
+
+    func fallbackPhabricatorFetch(objectName: String, urlString: String) {
+        print("Falling back to direct phabricator URL fetch")
+        guard let url = URL(string: urlString) else { return }
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Non-200 status response")
+                return
+            }
+
+            if let htmlString = String(data: data, encoding: .utf8),
+               let titleRange = htmlString.range(of: "<title>")?.upperBound,
+               let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
+                var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+                title = self.cleanUpPhabricatorTitle(title: title)
+                // Specific guard against a 404/security issue:
+                if title == "Login" && htmlString.contains(/class="auth-custom-message"/) {
+                    print("Page required login")
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.setLinkToPasteboard(text: "\(objectName): \(title)", url: urlString)
+                }
+            }
+        }
+
+        task.resume()
     }
 
     func fetchGerritTitleAndSetLink(text: String) -> Bool {
@@ -292,6 +321,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         timer.invalidate()
     }
+}
+
+struct PhabroxyResponse: Decodable {
+    let fullName: String
+    let name: String
+    let phid: String
+    let status: String
+    let type: String
+    let typeName: String
+    let uri: String
 }
 
 extension String {
