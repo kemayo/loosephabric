@@ -12,9 +12,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let pasteboard: NSPasteboard = .general
     var lastChangeCount: Int = 0
 
-    let nc = NotificationCenter.default
-    let publisher = NotificationCenter.default.publisher(for: Notification.Name("NSPasteboardDidChange"))
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         UserDefaults.standard.register(defaults: [
             "expandTitles": true,
@@ -262,7 +259,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        nc.removeObserver(self)
         timer.invalidate()
     }
 }
