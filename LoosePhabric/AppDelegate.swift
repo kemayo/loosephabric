@@ -64,7 +64,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if UserDefaults.standard.bool(forKey: "expandTitles") {
             guard let url = URL(string: urlString) else { return false }
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard let data = data, error == nil else { return }
+                guard let data = data, error == nil else {
+                    print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    print("Non-200 status response")
+                    return
+                }
+
                 if let htmlString = String(data: data, encoding: .utf8),
                    let titleRange = htmlString.range(of: "<title>")?.upperBound,
                    let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
@@ -137,6 +146,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    print("Non-200 status response")
+                    return
+                }
 
                 // Convert data to string and remove Gerrit's XSSI protection prefix
                 let dataString = String(data: data, encoding: .utf8)
@@ -198,7 +212,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if UserDefaults.standard.bool(forKey: "expandTitles") {
             guard let url = URL(string: urlString) else { return false }
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard let data = data, error == nil else { return }
+                guard let data = data, error == nil else {
+                    print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    print("Non-200 status response")
+                    return
+                }
+
                 if let htmlString = String(data: data, encoding: .utf8),
                    let titleRange = htmlString.range(of: "<title>")?.upperBound,
                    let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
