@@ -70,6 +70,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                    let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
                     var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
                     title = self.cleanUpPhabricatorTitle(title: title)
+                    // Specific guard against a 404/security issue:
+                    if title == "Login" && htmlString.contains(/class="auth-custom-message"/) {
+                        print("Page required login")
+                        return
+                    }
                     DispatchQueue.main.async {
                         self.setLinkToPasteboard(text: "\(ticket): \(title)", url: urlString)
                     }
