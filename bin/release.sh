@@ -58,7 +58,7 @@ echo "
       <sparkle:version>$internalVersion</sparkle:version>
       <sparkle:shortVersionString>$version</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>$minimumSystemVersion</sparkle:minimumSystemVersion>
-      <sparkle:releaseNotesLink>$BASEURL/releases/tag/v$version</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
       <enclosure
         url=\"$BASEURL/releases/download/v$version/$(basename $ZIPFILE)\"
         $signature

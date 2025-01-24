@@ -12,7 +12,7 @@
       <sparkle:version>10</sparkle:version>
       <sparkle:shortVersionString>0.5.1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:releaseNotesLink>https://github.com/kemayo/loosephabric/releases/tag/v0.5.1</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
       <enclosure
         url="https://github.com/kemayo/loosephabric/releases/download/v0.5.1/LoosePhabric-v0.5.1.zip"
         sparkle:edSignature="Ik1qeus5VTXF539z3ZpVDgQEgiVFwBi1UanaC3jC1RuXGsf1vKn3jLYVREMF4UMPmPXvdjrMM+AzLDYPHs2XCA==" length="1437365"
@@ -26,7 +26,7 @@
       <sparkle:version>9</sparkle:version>
       <sparkle:shortVersionString>0.5</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:releaseNotesLink>https://github.com/kemayo/loosephabric/releases/tag/v0.5</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
       <enclosure
         url="https://github.com/kemayo/loosephabric/releases/download/v0.5/LoosePhabric-v0.5.zip"
         sparkle:edSignature="0nrz7wq7SUeyVAjBjtAv2oGXYrJEE8E5yisH7vAWNkJj62nkQWFD4eANLtk+yMtLbd8xeWClUnshJiuB/GZcCg==" length="1437377"
@@ -40,7 +40,7 @@
       <sparkle:version>8</sparkle:version>
       <sparkle:shortVersionString>0.4</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:releaseNotesLink>https://github.com/kemayo/loosephabric/releases/tag/v0.4</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
       <enclosure
         url="https://github.com/kemayo/loosephabric/releases/download/v0.4/LoosePhabric-v0.4.zip"
         sparkle:edSignature="Gm8vKJkpWhfR7fjpNNaeIcvw0IbaH5S5lMeULathcZLDb5SWEtVSDs/pA1Ob2Ejr2u0eISkpvS7ZK0Z1Gj9tAg==" length="1431730"
@@ -54,7 +54,7 @@
       <sparkle:version>7</sparkle:version>
       <sparkle:shortVersionString>0.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:releaseNotesLink>https://github.com/kemayo/loosephabric/releases/tag/v0.3</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
       <enclosure
         url="https://github.com/kemayo/loosephabric/releases/download/v0.3/LoosePhabric-v0.3.zip"
         sparkle:edSignature="64e0kzljkp3m6Q0JMRQkxPc3CIhAt/MnGhHXsJe//+rF7rWnudDupC+GGw+ycsC77ktFW7gkCEJd2y+9UsOUBQ==" length="1431898"
@@ -68,7 +68,7 @@
       <sparkle:version>6</sparkle:version>
       <sparkle:shortVersionString>0.2</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:releaseNotesLink>https://github.com/kemayo/loosephabric/releases/tag/v0.2</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
       <enclosure
         url="https://github.com/kemayo/loosephabric/releases/download/v0.2/LoosePhabric-v0.2.zip"
         sparkle:edSignature="t4yHxZqFX6xwsDEBUyZzsa6c/kTBnZTSlXDmt0bQ9lExnQlxmdza55BklJcD0z2+esDlcC5BaotlyCmDxFJhBw==" length="1425114"
@@ -82,7 +82,7 @@
       <sparkle:version>5</sparkle:version>
       <sparkle:shortVersionString>0.1</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:releaseNotesLink>https://github.com/kemayo/loosephabric/releases/tag/v0.1</sparkle:releaseNotesLink>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
       <enclosure
         url="https://github.com/kemayo/loosephabric/releases/download/v0.1/LoosePhabric-v0.1.zip"
         sparkle:edSignature="L8LQPSZSUQvcSUziRKKUOJ3HZcCETV+IjDTz69dhXVNh3akUzJfUgZtctpMvZGrFEGET81LRLY2yPxaW5L3SAQ==" length="1425127"
