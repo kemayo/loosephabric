@@ -11,13 +11,13 @@
 		2701A0882C70F7AA0037376B /* UpdaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2701A0872C70F7AA0037376B /* UpdaterView.swift */; };
 		2753B9E42C6FD234000762F3 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 2753B9E32C6FD234000762F3 /* Sparkle */; };
 		27A841A32C13989F00C6A303 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 27A841A22C13989F00C6A303 /* LaunchAtLogin */; };
+		27BE22DF2D442AFD00C083ED /* PasteboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BE22DE2D442AFD00C083ED /* PasteboardController.swift */; };
 		27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */; };
 		27FA32BA2C13510F002F38E3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27FA32B92C13510F002F38E3 /* Assets.xcassets */; };
 		27FA32BD2C13510F002F38E3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27FA32BC2C13510F002F38E3 /* Preview Assets.xcassets */; };
 		27FA32C82C13510F002F38E3 /* LoosePhabricTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32C72C13510F002F38E3 /* LoosePhabricTests.swift */; };
 		27FA32D22C13510F002F38E3 /* LoosePhabricUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32D12C13510F002F38E3 /* LoosePhabricUITests.swift */; };
 		27FA32D42C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32D32C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift */; };
-		27FA32E42C1365A8002F38E3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA32E32C1365A8002F38E3 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +42,7 @@
 		2701A0872C70F7AA0037376B /* UpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterView.swift; sourceTree = "<group>"; };
 		2753B9E02C6FA27C000762F3 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		2753B9E52C6FD910000762F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		27BE22DE2D442AFD00C083ED /* PasteboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardController.swift; sourceTree = "<group>"; };
 		27FA32B22C13510E002F38E3 /* LoosePhabric.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoosePhabric.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricApp.swift; sourceTree = "<group>"; };
 		27FA32B92C13510F002F38E3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -52,8 +53,20 @@
 		27FA32CD2C13510F002F38E3 /* LoosePhabricUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoosePhabricUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27FA32D12C13510F002F38E3 /* LoosePhabricUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricUITests.swift; sourceTree = "<group>"; };
 		27FA32D32C13510F002F38E3 /* LoosePhabricUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoosePhabricUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		27FA32E32C1365A8002F38E3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		27BE22E42D4430C100C083ED /* Handlers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Handlers;
+			sourceTree = "<group>";
+		};
+		27BE22E72D44366000C083ED /* Extensions */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		27FA32AF2C13510E002F38E3 /* Frameworks */ = {
@@ -108,11 +121,13 @@
 			children = (
 				2753B9E52C6FD910000762F3 /* Info.plist */,
 				27FA32B52C13510E002F38E3 /* LoosePhabricApp.swift */,
+				27BE22DE2D442AFD00C083ED /* PasteboardController.swift */,
+				27BE22E42D4430C100C083ED /* Handlers */,
 				2701A0872C70F7AA0037376B /* UpdaterView.swift */,
 				2701A0852C70F7440037376B /* SettingsView.swift */,
-				27FA32E32C1365A8002F38E3 /* AppDelegate.swift */,
 				27FA32B92C13510F002F38E3 /* Assets.xcassets */,
 				27FA32BE2C13510F002F38E3 /* LoosePhabric.entitlements */,
+				27BE22E72D44366000C083ED /* Extensions */,
 				27FA32BB2C13510F002F38E3 /* Preview Content */,
 			);
 			path = LoosePhabric;
@@ -157,6 +172,10 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				27BE22E42D4430C100C083ED /* Handlers */,
+				27BE22E72D44366000C083ED /* Extensions */,
 			);
 			name = LoosePhabric;
 			packageProductDependencies = (
@@ -281,9 +300,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27BE22DF2D442AFD00C083ED /* PasteboardController.swift in Sources */,
 				2701A0882C70F7AA0037376B /* UpdaterView.swift in Sources */,
 				2701A0862C70F7440037376B /* SettingsView.swift in Sources */,
-				27FA32E42C1365A8002F38E3 /* AppDelegate.swift in Sources */,
 				27FA32B62C13510E002F38E3 /* LoosePhabricApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

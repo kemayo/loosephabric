@@ -10,11 +10,23 @@ import Sparkle
 
 @main
 struct LoosePhabricApp: App {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     private let updaterController: SPUStandardUpdaterController
+    private let pasteboardController: PasteboardController
 
     init() {
+        UserDefaults.standard.register(defaults: [
+            "expandTitles": true,
+            "phabricator": true,
+            "gerrit": true,
+            "gitlab": true,
+        ])
+
         updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+
+        pasteboardController = PasteboardController()
+        pasteboardController.registerHandler(PhabricatorHandler())
+        pasteboardController.registerHandler(GerritHandler())
+        pasteboardController.registerHandler(GitlabHandler())
     }
 
     var body: some Scene {
