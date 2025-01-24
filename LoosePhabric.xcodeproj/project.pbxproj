@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -227,7 +227,6 @@
 				};
 			};
 			buildConfigurationList = 27FA32AD2C13510E002F38E3 /* Build configuration list for PBXProject "LoosePhabric" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -239,6 +238,7 @@
 				27A841A12C13989F00C6A303 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 				2753B9E22C6FD234000762F3 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 27FA32B32C13510E002F38E3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
