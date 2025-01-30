@@ -32,6 +32,7 @@ extension BaseHandler {
     }
 
     func setLinkToPasteboard(text: String, url: String) {
+        print("Setting pasteboard", text, url)
         let pasteboard: NSPasteboard = .general
 
         // We can be confident that the original exists, because it's checked in onPasteboardChanged

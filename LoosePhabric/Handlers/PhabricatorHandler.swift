@@ -9,6 +9,7 @@ import Foundation
 
 final class PhabricatorHandler: BaseHandler, Sendable {
     let defaultsKey: String = "phabricator"
+
     func handle(_ text: String) -> Bool {
         // T12345 or T12345#54321 or https://phabricator.wikimedia.org/T12345#54321
 
@@ -55,8 +56,15 @@ final class PhabricatorHandler: BaseHandler, Sendable {
             }
             print("API response: \(String(data: data, encoding: .utf8) ?? "UNENCODABLE")")
             if let decoded = try? JSONDecoder().decode(PhabroxyResponse.self, from: data) {
+                var fullName = decoded.fullName
+                var uri = decoded.uri
+                if urlString.contains("#") {
+                    let comment = urlString.split(separator: "#").last ?? ""
+                    fullName = fullName.replacingOccurrences(of: "\(decoded.name)", with: "\(decoded.name)#\(comment)")
+                    uri = uri + "#\(comment)"
+                }
                 DispatchQueue.main.async {
-                    self.setLinkToPasteboard(text: decoded.fullName, url: decoded.uri)
+                    self.setLinkToPasteboard(text: fullName, url: uri)
                 }
             } else {
                 self.fallbackHTMLFetch(objectName: text, urlString: urlString)
