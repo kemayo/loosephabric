@@ -81,22 +81,42 @@ final class GerritHandler: BaseHandler, Sendable {
             // Debugging: Print the cleaned JSON string
             print("Cleaned JSON string: \(jsonString)")
 
-            do {
-                if let jsonResponse = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
-                    let subject = jsonResponse["subject"] as? String,
-                    let officialID = jsonResponse["id"] as? String
-                {
-                    let title = "\(subject) (\(officialID))"
-                    DispatchQueue.main.async {
-                        self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString)
-                    }
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSSSS"
+            decoder.dateDecodingStrategy = .formatted(dateFormatter)
+
+            if let decoded = try? decoder.decode(GerritResponse.self, from: jsonData) {
+                let title = "\(decoded.subject) (\(decoded.id))"
+                DispatchQueue.main.async {
+                    self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString)
                 }
-            } catch {
-                print("Error parsing JSON response: \(error)")
-                print("JSON string: \(jsonString)")
+            } else {
+                print("Decoding failed")
             }
         }
 
         task.resume()
     }
 }
+
+// Note, there's still missing fields from this
+struct GerritResponse: Decodable {
+    let id: String
+    let changeId: String
+    let subject: String
+    let status: String
+    let branch: String
+    let topic: String
+    let tripletId: String
+    let project: String
+    let created: Date
+    let updated: Date
+    let submitted: Date?
+    let insertions: Int
+    let deletions: Int
+    let currentRevisionNumber: Int
+    let hashtags: [String]?
+}
+
