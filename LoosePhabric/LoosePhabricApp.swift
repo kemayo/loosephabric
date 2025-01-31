@@ -16,6 +16,7 @@ struct LoosePhabricApp: App {
     init() {
         UserDefaults.standard.register(defaults: [
             "expandTitles": true,
+            "showStatus": true,
             "phabricator": true,
             "gerrit": true,
             "gitlab": true,

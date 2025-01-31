@@ -9,7 +9,14 @@ import Foundation
 
 final class GerritHandler: BaseHandler, Sendable {
     let defaultsKey: String = "gerrit"
-    
+
+    let statusMap: [String: String] = [
+        //"NEW": "🔵",
+        "DRAFT": "🟡",
+        "ABANDONED": "❌",
+        "MERGED": "✅",
+    ]
+
     func handle(_ text: String) -> Bool {
         // Extract project name and change number from the input
         // e.g. https://gerrit.wikimedia.org/r/c/mediawiki/extensions/VisualEditor/+/1010703/20
@@ -88,7 +95,10 @@ final class GerritHandler: BaseHandler, Sendable {
             decoder.dateDecodingStrategy = .formatted(dateFormatter)
 
             if let decoded = try? decoder.decode(GerritResponse.self, from: jsonData) {
-                let title = "\(decoded.subject) (\(decoded.id))"
+                var title = "\(decoded.subject) (\(decoded.id))"
+                if self.showStatus && (self.statusMap[decoded.status] != nil) {
+                    title = "\(self.statusMap[decoded.status] ?? "")\(title)"
+                }
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString)
                 }

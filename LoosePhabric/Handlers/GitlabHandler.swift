@@ -11,7 +11,8 @@ final class GitlabHandler: BaseHandler, Sendable {
     let defaultsKey: String = "gitlab"
 
     func handle(_ text: String) -> Bool {
-        // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/253
+        // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/253 (merged)
+        // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/254 (closed)
         let mergePattern = #//repos/mediawiki/(?<repo>.+)/-/merge_requests/(?<reqid>\d+)/#
         let urlString: String
         let output: String
@@ -51,6 +52,13 @@ final class GitlabHandler: BaseHandler, Sendable {
                 var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines).htmlDecoded
                 if let match = title.wholeMatch(of: #/(?<title>.+) \(!\d+\) ·.+/#) {
                     title = "\(match.title)"
+                }
+                if self.showStatus {
+                    if htmlString.contains("data-state=\"merged\"") {
+                        title = "✅" + title
+                    } else if htmlString.contains("data-state=\"closed\"") {
+                        title = "❌" + title
+                    }
                 }
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: "\(title) (\(text))", url: urlString)

@@ -13,6 +13,7 @@ import LaunchAtLogin
 
 struct SettingsView: View {
     @AppStorage("expandTitles") private var expandTitles: Bool = true
+    @AppStorage("showStatus") private var showStatus: Bool = true
     @AppStorage("phabricator") private var phabricator: Bool = true
     @AppStorage("gerrit") private var gerrit: Bool = true
     @AppStorage("gitlab") private var gitlab: Bool = true
@@ -22,6 +23,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Toggle("Expand to include titles", isOn: $expandTitles)
+            Toggle("Show status if available", isOn: $showStatus)
             Toggle("Watch for Phabricator", isOn: $phabricator)
             Toggle("Watch for Gerrit", isOn: $gerrit)
             Toggle("Watch for Gitlab", isOn: $gitlab)
@@ -30,7 +32,7 @@ struct SettingsView: View {
             UpdaterSettingsView(updater: updater)
         }
         .padding(20)
-        .frame(width: 350, height: 250)
+        .frame(width: 350, height: 270)
     }
 }
 

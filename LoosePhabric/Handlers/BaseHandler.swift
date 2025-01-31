@@ -23,6 +23,10 @@ extension BaseHandler {
         return UserDefaults.standard.bool(forKey: "expandTitles")
     }
 
+    var showStatus: Bool {
+        return UserDefaults.standard.bool(forKey: "showStatus")
+    }
+
     func setPasteboard(text: String, url: String) {
         if self.expand {
             fetchTitleAndSetToPasteboard(text: text, urlString: url)

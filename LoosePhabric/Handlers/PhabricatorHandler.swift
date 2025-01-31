@@ -10,6 +10,11 @@ import Foundation
 final class PhabricatorHandler: BaseHandler, Sendable {
     let defaultsKey: String = "phabricator"
 
+    let statusMap: [String: String] = [
+        //"open": "🔵",
+        "closed": "✅",
+    ]
+
     func handle(_ text: String) -> Bool {
         // T12345 or T12345#54321 or https://phabricator.wikimedia.org/T12345#54321
 
@@ -62,6 +67,9 @@ final class PhabricatorHandler: BaseHandler, Sendable {
                     let comment = urlString.split(separator: "#").last ?? ""
                     fullName = fullName.replacingOccurrences(of: "\(decoded.name)", with: "\(decoded.name)#\(comment)")
                     uri = uri + "#\(comment)"
+                }
+                if self.showStatus && (self.statusMap[decoded.status] != nil) {
+                    fullName = "\(self.statusMap[decoded.status] ?? "")\(fullName)"
                 }
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: fullName, url: uri)
