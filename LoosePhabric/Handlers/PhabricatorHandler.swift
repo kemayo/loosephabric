@@ -68,9 +68,7 @@ final class PhabricatorHandler: BaseHandler, Sendable {
                     fullName = fullName.replacingOccurrences(of: "\(decoded.name)", with: "\(decoded.name)#\(comment)")
                     uri = uri + "#\(comment)"
                 }
-                if self.showStatus && (self.statusMap[decoded.status] != nil) {
-                    fullName = "\(self.statusMap[decoded.status] ?? "")\(fullName)"
-                }
+                fullName = self.decorateTitle(fullName, decoded.status)
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: fullName, url: uri)
                 }

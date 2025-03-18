@@ -96,9 +96,7 @@ final class GerritHandler: BaseHandler, Sendable {
 
             if let decoded = try? decoder.decode(GerritResponse.self, from: jsonData) {
                 var title = "\(decoded.subject) (\(decoded.id))"
-                if self.showStatus && (self.statusMap[decoded.status] != nil) {
-                    title = "\(self.statusMap[decoded.status] ?? "")\(title)"
-                }
+                title = self.decorateTitle(title, decoded.status)
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString)
                 }

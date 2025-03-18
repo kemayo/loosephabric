@@ -10,6 +10,12 @@ import Foundation
 final class GitlabHandler: BaseHandler, Sendable {
     let defaultsKey: String = "gitlab"
 
+    let statusMap: [String: String] = [
+        //"open": "🔵",
+        "merged": "✅",
+        "closed": "❌",
+    ]
+
     func handle(_ text: String) -> Bool {
         // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/253 (merged)
         // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/254 (closed)
@@ -51,14 +57,10 @@ final class GitlabHandler: BaseHandler, Sendable {
                let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
                 var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines).htmlDecoded
                 if let match = title.wholeMatch(of: #/(?<title>.+) \(!\d+\) ·.+/#) {
-                    title = "\(match.title)"
+                    title = String(match.title)
                 }
-                if self.showStatus {
-                    if htmlString.contains("data-state=\"merged\"") {
-                        title = "✅" + title
-                    } else if htmlString.contains("data-state=\"closed\"") {
-                        title = "❌" + title
-                    }
+                if let statusMatch = htmlString.firstMatch(of: #/data-state="(?<status>[^"]+)"/#) {
+                    title = self.decorateTitle(title, String(statusMatch.status))
                 }
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: "\(title) (\(text))", url: urlString)

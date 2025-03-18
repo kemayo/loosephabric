@@ -9,6 +9,7 @@ import Foundation
 import AppKit
 
 protocol BaseHandler {
+    var statusMap: [String: String] { get }
     var defaultsKey: String { get }
     func handle(_ text: String) -> Bool
     func fetchTitleAndSetToPasteboard(text: String, urlString: String)
@@ -67,5 +68,12 @@ extension BaseHandler {
         pasteboard.setString(url, forType: .URL)
 
         NotificationCenter.default.post(name: Notification.Name("PasteboardSet"), object: nil)
+    }
+
+    func decorateTitle(_ title: String, _ status: String) -> String {
+        if self.showStatus && (self.statusMap[status] != nil) {
+            return "\(self.statusMap[status]!) \(title)"
+        }
+        return title
     }
 }
