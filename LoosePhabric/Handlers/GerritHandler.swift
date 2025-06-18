@@ -94,14 +94,15 @@ final class GerritHandler: BaseHandler, Sendable {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSSSS"
             decoder.dateDecodingStrategy = .formatted(dateFormatter)
 
-            if let decoded = try? decoder.decode(GerritResponse.self, from: jsonData) {
+            do {
+                let decoded = try decoder.decode(GerritResponse.self, from: jsonData)
                 var title = "\(decoded.subject) (\(decoded.id))"
                 title = self.decorateTitle(title, decoded.status)
                 DispatchQueue.main.async {
                     self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString)
                 }
-            } else {
-                print("Decoding failed")
+            } catch {
+                print("Decoding failed", error)
             }
         }
 
@@ -109,6 +110,7 @@ final class GerritHandler: BaseHandler, Sendable {
     }
 }
 
+// See: https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-info
 // Note, there's still missing fields from this
 struct GerritResponse: Decodable {
     let id: String
@@ -116,15 +118,26 @@ struct GerritResponse: Decodable {
     let subject: String
     let status: String
     let branch: String
-    let topic: String
+    let topic: String?
     let tripletId: String
     let project: String
     let created: Date
     let updated: Date
     let submitted: Date?
+    let submitter: GerritAccountInfo?
+    let owner: GerritAccountInfo
     let insertions: Int
     let deletions: Int
     let currentRevisionNumber: Int
     let hashtags: [String]?
 }
 
+// https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#account-info
+struct GerritAccountInfo: Decodable {
+    let _accountId: Int
+    let name: String?
+    let displayName: String?
+    let email: String?
+    let username: String?
+    let status: String?
+}
