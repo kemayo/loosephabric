@@ -38,8 +38,8 @@ final class GerritHandler: BaseHandler, Sendable {
 
             let pathComponents = url.pathComponents
 
-            if url.path().wholeMatch(of: /\/r\/\d+/) != nil {
-                // e.g. https://gerrit.wikimedia.org/r/1047469
+            if url.path().wholeMatch(of: /\/r\/(c\/)?\d+\/?/) != nil {
+                // e.g. https://gerrit.wikimedia.org/r/1047469 or https://gerrit.wikimedia.org/r/c/1238430/
                 changeID = pathComponents.last!
             } else {
                 guard let cIndex = pathComponents.firstIndex(of: "c"),
