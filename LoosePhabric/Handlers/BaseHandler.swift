@@ -67,7 +67,8 @@ extension BaseHandler {
         // For completeness:
         pasteboard.setString(url, forType: .URL)
 
-        NotificationCenter.default.post(name: Notification.Name("PasteboardSet"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("PasteboardSet"), object: nil,
+                                        userInfo: ["url": url, "text": text, "source": defaultsKey])
     }
 
     func decorateTitle(_ title: String, _ status: String) -> String {

@@ -10,6 +10,7 @@ import UserNotifications
 import Sparkle
 
 let UPDATE_NOTIFICATION_IDENTIFIER = "LoosePhabric.UpdateNotification"
+let PASTEBOARD_NOTIFICATION_IDENTIFIER = "LoosePhabric.PasteboardUpdated"
 
 @main
 struct LoosePhabricApp: App {
@@ -26,6 +27,7 @@ struct LoosePhabricApp: App {
             "phabricator": true,
             "gerrit": true,
             "gitlab": true,
+            "notify": true,
         ])
 
         updaterController = SPUStandardUpdaterController(
@@ -82,6 +84,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         UNUserNotificationCenter.current().delegate = self
         requestNotificationPermission()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onPasteboardSet), name: Notification.Name("PasteboardSet"), object: nil)
     }
 
     func requestNotificationPermission() {
@@ -102,17 +106,39 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse) async {
-        //let userInfo = response.notification.request.content.userInfo
+        let userInfo = response.notification.request.content.userInfo
         //print("Notification with userInfo: \(userInfo)")
         if response.notification.request.identifier == UPDATE_NOTIFICATION_IDENTIFIER && response.actionIdentifier == UNNotificationDefaultActionIdentifier {
             // show controller
             await handleUpdaterRequest()
+        } else if response.notification.request.identifier == PASTEBOARD_NOTIFICATION_IDENTIFIER && response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            if let url = URL(string: userInfo["url"] as! String) {
+                NSWorkspace.shared.open(url)
+            }
         }
     }
 
     @MainActor
     func handleUpdaterRequest() {
         updaterController?.checkForUpdates(nil)
+    }
+
+    @objc func onPasteboardSet(_ notification: NSNotification) {
+        if !UserDefaults.standard.bool(forKey: "notify") {
+            return
+        }
+        guard let userInfo = notification.userInfo else { return }
+        let source = userInfo["source"] ?? "unknown"
+        let url = userInfo["url"] ?? "unknown"
+        let text = userInfo["text"] ?? "unknown"
+
+        let content = UNMutableNotificationContent()
+        content.title = "\(source) detected"
+        content.body = "\(text)\n\(url)"
+        content.userInfo = userInfo
+
+        let request = UNNotificationRequest(identifier: PASTEBOARD_NOTIFICATION_IDENTIFIER, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 }
 

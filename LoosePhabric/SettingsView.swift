@@ -17,6 +17,7 @@ struct SettingsView: View {
     @AppStorage("phabricator") private var phabricator: Bool = true
     @AppStorage("gerrit") private var gerrit: Bool = true
     @AppStorage("gitlab") private var gitlab: Bool = true
+    @AppStorage("notify") private var notify: Bool = true
 
     let updater: SPUUpdater
 
@@ -24,15 +25,18 @@ struct SettingsView: View {
         Form {
             Toggle("Expand to include titles", isOn: $expandTitles)
             Toggle("Show status if available", isOn: $showStatus)
+            Toggle("Notify when a replacement occurs", isOn: $notify)
+            Divider()
             Toggle("Watch for Phabricator", isOn: $phabricator)
             Toggle("Watch for Gerrit", isOn: $gerrit)
             Toggle("Watch for Gitlab", isOn: $gitlab)
+            Divider()
             LaunchAtLogin.Toggle()
 
             UpdaterSettingsView(updater: updater)
         }
         .padding(20)
-        .frame(width: 350, height: 270)
+        .frame(width: 350)
     }
 }
 
