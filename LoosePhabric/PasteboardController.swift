@@ -32,6 +32,12 @@ class PasteboardController {
         guard let item = items.first else { return }
         guard let plain = item.string(forType: .string) else { return }
 
+        let ours = item.string(forType: PASTEBOARD_TYPE)
+        if ours == plain {
+            print("Abandoning: already handled by us")
+            return
+        }
+
         for handler in handlers {
             if handler.enabled() && handler.handle(plain) {
                 return

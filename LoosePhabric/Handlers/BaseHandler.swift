@@ -67,6 +67,9 @@ extension BaseHandler {
         // For completeness:
         pasteboard.setString(url, forType: .URL)
 
+        // set this so I can detect when the item is one I directly set
+        pasteboard.setData(original.data(using: .utf8)!, forType: PASTEBOARD_TYPE)
+
         NotificationCenter.default.post(name: Notification.Name("PasteboardSet"), object: nil,
                                         userInfo: ["url": url, "text": text, "source": defaultsKey])
     }

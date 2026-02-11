@@ -11,6 +11,7 @@ import Sparkle
 
 let UPDATE_NOTIFICATION_IDENTIFIER = "LoosePhabric.UpdateNotification"
 let PASTEBOARD_NOTIFICATION_IDENTIFIER = "LoosePhabric.PasteboardUpdated"
+let PASTEBOARD_TYPE = NSPasteboard.PasteboardType(rawValue: "x-LoosePhabric")
 
 @main
 struct LoosePhabricApp: App {
