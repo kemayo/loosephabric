@@ -19,7 +19,8 @@ final class GitlabHandler: BaseHandler, Sendable {
     func handle(_ text: String) -> Bool {
         // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/253 (merged)
         // https://gitlab.wikimedia.org/repos/mediawiki/services/ipoid/-/merge_requests/254 (closed)
-        let mergePattern = #//repos/mediawiki/(?<repo>.+)/-/merge_requests/(?<reqid>\d+)/#
+        // https://gitlab.wikimedia.org/repos/data-engineering/schemas-event-primary/-/merge_requests/86/diffs
+        let mergePattern = #//(?:repos/)?(?<repo>.+?)/-/merge_requests/(?<reqid>\d+)(?:/.*)?/#
         let urlString: String
         let output: String
         if let url = URL(string: text), url.host == "gitlab.wikimedia.org" {
