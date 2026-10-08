@@ -10,7 +10,7 @@ Similarly, for Gerrit, it's there is a lot more context in seeing [Add type rq_t
 
 ## How
 
-Add `LoosePhabric` to the Applications directory and open it. In the menu bar, you can configure it to launch at login. You can also select if it should operate only on Phabricator links, Gerrit links, or both.
+Download the latest version from the [releases page](https://github.com/kemayo/loosephabric/releases/latest), add `LoosePhabric` to the Applications directory, and open it. In the menu bar, you can configure it to launch at login. You can also select which of Phabricator, GitLab, and Gerrit links it should operate on.
 
 ### Phabricator
 
