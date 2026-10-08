@@ -26,7 +26,7 @@ APPCASTFILE=$2
 [ -f "$ZIPFILE" ] || die "$ZIPFILE doesn't exist"
 [ -f "$APPCASTFILE" ] || die "$APPCASTFILE doesn't exist"
 
-BUILDSETTINGS=$(xcodebuild -project ../LoosePhabric/LoosePhabric.xcodeproj -scheme LoosePhabric -showBuildSettings 2>/dev/null)
+BUILDSETTINGS=$(xcodebuild -project ../LoosePhabric/LoosePhabric.xcodeproj -scheme LoosePhabric -showBuildSettings) || die "xcodebuild -showBuildSettings failed"
 
 DERIVED=$(realpath $(echo "$BUILDSETTINGS" | grep -m 1 "\bSYMROOT" | sed -nr 's/^.+ = (.+)$/\1/p')/../../)
 
@@ -47,7 +47,7 @@ internalVersion=$(echo "$BUILDSETTINGS" | grep -m 1 "\bCURRENT_PROJECT_VERSION =
 minimumSystemVersion=$(echo "$BUILDSETTINGS" | grep -m 1 "\bMACOSX_DEPLOYMENT_TARGET =" | sed -nr 's/^.+ = (.+)$/\1/p')
 date="$(date +'%a, %d %b %Y %H:%M:%S %z')"
 
-signature=$($SPARKLE/sign_update $ZIPFILE)
+signature=$($SPARKLE/sign_update $ZIPFILE) || die "sign_update failed: $signature"
 
 echo "Signed release: $signature"
 
