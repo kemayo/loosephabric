@@ -41,6 +41,9 @@ final class GerritHandler: BaseHandler, Sendable {
             if url.path().wholeMatch(of: /\/r\/(c\/)?\d+\/?/) != nil {
                 // e.g. https://gerrit.wikimedia.org/r/1047469 or https://gerrit.wikimedia.org/r/c/1238430/
                 changeID = pathComponents.last!
+            } else if let match = url.path().wholeMatch(of: /\/r\/q\/(I[a-fA-F0-9]{40})\/?/) {
+                // e.g. https://gerrit.wikimedia.org/r/q/If317f991a4782bbc980d3923178799e1c67ebaa8
+                changeID = String(match.1)
             } else {
                 guard let cIndex = pathComponents.firstIndex(of: "c"),
                       let plusIndex = pathComponents.firstIndex(of: "+"),
@@ -60,8 +63,12 @@ final class GerritHandler: BaseHandler, Sendable {
 
     func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int) {
         let changeID = text
-        // Construct the Gerrit API URL using the correct change ID format
-        let apiURLString = "https://gerrit.wikimedia.org/r/changes/\(changeID)"
+        // A backport keeps the Change-Id, so a direct lookup of a Change-Id can find more than one change and fail.
+        // Search instead, and use the oldest change, which is the original.
+        let isChangeID = changeID.wholeMatch(of: /I[a-fA-F0-9]{40}/) != nil
+        let apiURLString = isChangeID
+            ? "https://gerrit.wikimedia.org/r/changes/?q=change:\(changeID)"
+            : "https://gerrit.wikimedia.org/r/changes/\(changeID)"
         guard let apiURL = URL(string: apiURLString) else { return }
 
         let task = URLSession.shared.dataTask(with: apiURL) { (data, response, error) in
@@ -96,7 +103,17 @@ final class GerritHandler: BaseHandler, Sendable {
             decoder.dateDecodingStrategy = .formatted(dateFormatter)
 
             do {
-                let decoded = try decoder.decode(GerritResponse.self, from: jsonData)
+                let decoded: GerritResponse
+                if isChangeID {
+                    let results = try decoder.decode([GerritResponse].self, from: jsonData)
+                    guard let oldest = results.min(by: { $0._number < $1._number }) else {
+                        print("No changes found")
+                        return
+                    }
+                    decoded = oldest
+                } else {
+                    decoded = try decoder.decode(GerritResponse.self, from: jsonData)
+                }
                 var title = "\(decoded.subject) (\(decoded.id))"
                 title = self.decorateTitle(title, decoded.status)
                 DispatchQueue.main.async {
@@ -115,6 +132,7 @@ final class GerritHandler: BaseHandler, Sendable {
 // Note, there's still missing fields from this
 struct GerritResponse: Decodable {
     let id: String
+    let _number: Int
     let changeId: String
     let subject: String
     let status: String
