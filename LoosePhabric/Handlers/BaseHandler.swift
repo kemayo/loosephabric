@@ -51,12 +51,10 @@ extension BaseHandler {
             print("Abandoning: pasteboard no longer has text")
             return
         }
-        var htmlSafeText = text
-        if !htmlSafeText.contains("&[^;]+;") {
-            htmlSafeText = htmlSafeText.replacingOccurrences(of: "<", with: "&lt;")
-                .replacingOccurrences(of:">", with: "&gt;");
-            print("Cleaned text", htmlSafeText)
-        }
+        // The text is already decoded, so escape all of it. Escape "&" first, so the other entities stay intact.
+        let htmlSafeText = text.replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
 
         pasteboard.clearContents()
         // HTML because it's needed for pasting into Google Docs or similar locations
