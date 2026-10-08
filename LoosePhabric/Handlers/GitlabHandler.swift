@@ -55,14 +55,16 @@ final class GitlabHandler: BaseHandler, Sendable {
             if let htmlString = String(data: data, encoding: .utf8),
                let titleRange = htmlString.range(of: "<title>")?.upperBound,
                let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
-                var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines).htmlDecoded
-                if let match = title.wholeMatch(of: #/(?<title>.+) \(!\d+\) ·.+/#) {
-                    title = String(match.title)
-                }
-                if let statusMatch = htmlString.firstMatch(of: #/data-state="(?<status>[^"]+)"/#) {
-                    title = self.decorateTitle(title, String(statusMatch.status))
-                }
+                let rawTitle = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+                let status = htmlString.firstMatch(of: #/data-state="(?<status>[^"]+)"/#).map { String($0.status) }
                 DispatchQueue.main.async {
+                    var title = rawTitle.htmlDecoded
+                    if let match = title.wholeMatch(of: #/(?<title>.+) \(!\d+\) ·.+/#) {
+                        title = String(match.title)
+                    }
+                    if let status {
+                        title = self.decorateTitle(title, status)
+                    }
                     self.setLinkToPasteboard(text: "\(title) (\(text))", url: urlString)
                 }
             }

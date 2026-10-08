@@ -8,6 +8,8 @@
 import Foundation
 
 extension String {
+    // The HTML importer uses WebKit. It is not safe off the main thread.
+    @MainActor
     var htmlDecoded: String {
         let decoded = try? NSAttributedString(data: Data(utf8), options: [
             .documentType: NSAttributedString.DocumentType.html,

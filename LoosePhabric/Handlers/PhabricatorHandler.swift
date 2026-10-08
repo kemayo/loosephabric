@@ -97,14 +97,15 @@ final class PhabricatorHandler: BaseHandler, Sendable {
             if let htmlString = String(data: data, encoding: .utf8),
                let titleRange = htmlString.range(of: "<title>")?.upperBound,
                let titleEndRange = htmlString.range(of: "</title>", range: titleRange..<htmlString.endIndex)?.lowerBound {
-                var title = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
-                title = self.cleanUpHTMLTitle(title: title)
-                // Specific guard against a 404/security issue:
-                if title == "Login" && htmlString.contains(/class="auth-custom-message"/) {
-                    print("Page required login")
-                    return
-                }
+                let rawTitle = String(htmlString[titleRange..<titleEndRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+                let needsLogin = htmlString.contains(/class="auth-custom-message"/)
                 DispatchQueue.main.async {
+                    let title = self.cleanUpHTMLTitle(title: rawTitle)
+                    // Specific guard against a 404/security issue:
+                    if title == "Login" && needsLogin {
+                        print("Page required login")
+                        return
+                    }
                     self.setLinkToPasteboard(text: "\(objectName): \(title)", url: urlString)
                 }
             }
@@ -113,6 +114,7 @@ final class PhabricatorHandler: BaseHandler, Sendable {
         task.resume()
     }
 
+    @MainActor
     func cleanUpHTMLTitle(title: String) -> String {
         // Remove the leading "⚓ " and any other unwanted parts from the title
         var cleanedTitle = title
