@@ -126,31 +126,10 @@ final class GerritHandler: BaseHandler, Sendable {
 }
 
 // See: https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-info
-// Note, there's still missing fields from this
+// Decode only the fields we use. Each extra required field can make decoding fail if Gerrit omits it.
 struct GerritResponse: Decodable {
     let id: String
     let _number: Int
-    let changeId: String
     let subject: String
     let status: String
-    let branch: String
-    let topic: String?
-    let tripletId: String
-    let project: String
-    let submitter: GerritAccountInfo?
-    let owner: GerritAccountInfo
-    let insertions: Int
-    let deletions: Int
-    let currentRevisionNumber: Int
-    let hashtags: [String]?
-}
-
-// https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#account-info
-struct GerritAccountInfo: Decodable {
-    let _accountId: Int
-    let name: String?
-    let displayName: String?
-    let email: String?
-    let username: String?
-    let status: String?
 }
