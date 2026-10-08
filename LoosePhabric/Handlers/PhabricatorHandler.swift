@@ -44,19 +44,19 @@ final class PhabricatorHandler: BaseHandler, Sendable {
         return true
     }
 
-    func fetchTitleAndSetToPasteboard(text: String, urlString: String) {
+    func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int) {
         // First we're going to try using phabroxy
         guard let url = URL(string: "https://phabroxy.toolforge.org/lookup/\(text)") else { return }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data, error == nil else {
                 print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
-                self.fallbackHTMLFetch(objectName: text, urlString: urlString)
+                self.fallbackHTMLFetch(objectName: text, urlString: urlString, changeCount: changeCount)
                 return
             }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                 print("Non-200 status response")
-                self.fallbackHTMLFetch(objectName: text, urlString: urlString)
+                self.fallbackHTMLFetch(objectName: text, urlString: urlString, changeCount: changeCount)
                 return
             }
             print("API response: \(String(data: data, encoding: .utf8) ?? "UNENCODABLE")")
@@ -70,17 +70,17 @@ final class PhabricatorHandler: BaseHandler, Sendable {
                 }
                 fullName = self.decorateTitle(fullName, decoded.status)
                 DispatchQueue.main.async {
-                    self.setLinkToPasteboard(text: fullName, url: uri)
+                    self.setLinkToPasteboard(text: fullName, url: uri, changeCount: changeCount)
                 }
             } else {
-                self.fallbackHTMLFetch(objectName: text, urlString: urlString)
+                self.fallbackHTMLFetch(objectName: text, urlString: urlString, changeCount: changeCount)
             }
         }
 
         task.resume()
     }
 
-    func fallbackHTMLFetch(objectName: String, urlString: String) {
+    func fallbackHTMLFetch(objectName: String, urlString: String, changeCount: Int) {
         print("Falling back to direct phabricator URL fetch")
         guard let url = URL(string: urlString) else { return }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -106,7 +106,7 @@ final class PhabricatorHandler: BaseHandler, Sendable {
                         print("Page required login")
                         return
                     }
-                    self.setLinkToPasteboard(text: "\(objectName): \(title)", url: urlString)
+                    self.setLinkToPasteboard(text: "\(objectName): \(title)", url: urlString, changeCount: changeCount)
                 }
             }
         }

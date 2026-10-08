@@ -57,7 +57,7 @@ final class GerritHandler: BaseHandler, Sendable {
         return true
     }
 
-    func fetchTitleAndSetToPasteboard(text: String, urlString: String) {
+    func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int) {
         let changeID = text
         // Construct the Gerrit API URL using the correct change ID format
         let apiURLString = "https://gerrit.wikimedia.org/r/changes/\(changeID)"
@@ -99,7 +99,7 @@ final class GerritHandler: BaseHandler, Sendable {
                 var title = "\(decoded.subject) (\(decoded.id))"
                 title = self.decorateTitle(title, decoded.status)
                 DispatchQueue.main.async {
-                    self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString)
+                    self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString, changeCount: changeCount)
                 }
             } catch {
                 print("Decoding failed", error)

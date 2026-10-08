@@ -39,7 +39,7 @@ final class GitlabHandler: BaseHandler, Sendable {
         return true
     }
 
-    func fetchTitleAndSetToPasteboard(text: String, urlString: String) {
+    func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int) {
         guard let url = URL(string: urlString) else { return }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data, error == nil else {
@@ -65,7 +65,7 @@ final class GitlabHandler: BaseHandler, Sendable {
                     if let status {
                         title = self.decorateTitle(title, status)
                     }
-                    self.setLinkToPasteboard(text: "\(title) (\(text))", url: urlString)
+                    self.setLinkToPasteboard(text: "\(title) (\(text))", url: urlString, changeCount: changeCount)
                 }
             }
         }

@@ -12,7 +12,7 @@ protocol BaseHandler {
     var statusMap: [String: String] { get }
     var defaultsKey: String { get }
     func handle(_ text: String) -> Bool
-    func fetchTitleAndSetToPasteboard(text: String, urlString: String)
+    func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int)
 }
 
 extension BaseHandler {
@@ -29,19 +29,28 @@ extension BaseHandler {
     }
 
     func setPasteboard(text: String, url: String) {
+        let changeCount = NSPasteboard.general.changeCount
         if self.expand {
-            fetchTitleAndSetToPasteboard(text: text, urlString: url)
+            fetchTitleAndSetToPasteboard(text: text, urlString: url, changeCount: changeCount)
         } else {
-            setLinkToPasteboard(text: text, url: url)
+            setLinkToPasteboard(text: text, url: url, changeCount: changeCount)
         }
     }
 
-    func setLinkToPasteboard(text: String, url: String) {
+    func setLinkToPasteboard(text: String, url: String, changeCount: Int) {
         print("Setting pasteboard", text, url)
         let pasteboard: NSPasteboard = .general
 
-        // We can be confident that the original exists, because it's checked in onPasteboardChanged
-        let original = pasteboard.pasteboardItems!.first!.string(forType: .string) ?? text
+        // The user can copy something else during a title fetch. Do not overwrite it.
+        if pasteboard.changeCount != changeCount {
+            print("Abandoning: pasteboard changed during fetch")
+            return
+        }
+
+        guard let original = pasteboard.pasteboardItems?.first?.string(forType: .string) else {
+            print("Abandoning: pasteboard no longer has text")
+            return
+        }
         var htmlSafeText = text
         if !htmlSafeText.contains("&[^;]+;") {
             htmlSafeText = htmlSafeText.replacingOccurrences(of: "<", with: "&lt;")
