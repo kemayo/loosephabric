@@ -44,7 +44,8 @@ final class GerritHandler: BaseHandler, Sendable {
             } else {
                 guard let cIndex = pathComponents.firstIndex(of: "c"),
                       let plusIndex = pathComponents.firstIndex(of: "+"),
-                      cIndex < plusIndex else { return false }
+                      cIndex < plusIndex,
+                      plusIndex + 1 < pathComponents.count else { return false }
                 let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
                 let projectName = projectNameComponents.joined(separator: "%2F")
                 let changeNumber = pathComponents[plusIndex+1]
