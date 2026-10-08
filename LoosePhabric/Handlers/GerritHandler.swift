@@ -98,9 +98,6 @@ final class GerritHandler: BaseHandler, Sendable {
 
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSSSS"
-            decoder.dateDecodingStrategy = .formatted(dateFormatter)
 
             do {
                 let decoded: GerritResponse
@@ -140,9 +137,6 @@ struct GerritResponse: Decodable {
     let topic: String?
     let tripletId: String
     let project: String
-    let created: Date
-    let updated: Date
-    let submitted: Date?
     let submitter: GerritAccountInfo?
     let owner: GerritAccountInfo
     let insertions: Int
