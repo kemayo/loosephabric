@@ -22,9 +22,11 @@ final class PhabricatorHandler: BaseHandler, Sendable {
         // rABCD for repositories also exists
         // .ignoresCase() could make sense
         let phabObjectPattern = /[TPDMEF]\d+(?:#\d+)?/
+        // Bare IDs need 3 or more digits, so that short codes like P2 (priority) or F5 (key) are not changed.
+        let bareObjectPattern = /[TPDMEF]\d{3,}(?:#\d+)?/
         let urlString: String
         let objectName: String
-        if (text.wholeMatch(of: phabObjectPattern) != nil) {
+        if (text.wholeMatch(of: bareObjectPattern) != nil) {
             urlString = "https://phabricator.wikimedia.org/\(text)"
             objectName = text
         } else if let url = URL(string: text), url.host == "phabricator.wikimedia.org" && url.pathComponents.count == 2 && (url.lastPathComponent.wholeMatch(of: phabObjectPattern) != nil) {
