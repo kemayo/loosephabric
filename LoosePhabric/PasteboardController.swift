@@ -15,6 +15,8 @@ class PasteboardController {
     var handlers: [BaseHandler] = []
 
     init () {
+        // Do not process what was already on the pasteboard when the app started.
+        lastChangeCount = pasteboard.changeCount
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(checkPasteboard), userInfo: nil, repeats: true)
         NotificationCenter.default.addObserver(self, selector: #selector(onPasteboardSet), name: Notification.Name("PasteboardSet"), object: nil)
     }
