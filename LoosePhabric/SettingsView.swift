@@ -20,6 +20,7 @@ struct SettingsView: View {
     @AppStorage("notify") private var notify: Bool = true
 
     let updater: SPUUpdater
+    let updateStatus: SparkleUserDriverDelegate
 
     var body: some View {
         Form {
@@ -33,7 +34,7 @@ struct SettingsView: View {
             Divider()
             LaunchAtLogin.Toggle()
 
-            UpdaterSettingsView(updater: updater)
+            UpdaterSettingsView(updater: updater, updateStatus: updateStatus)
         }
         .padding(20)
         .frame(width: 350)
@@ -42,12 +43,14 @@ struct SettingsView: View {
 
 struct UpdaterSettingsView: View {
     private let updater: SPUUpdater
+    private let updateStatus: SparkleUserDriverDelegate
 
     @State private var automaticallyChecksForUpdates: Bool
     @State private var automaticallyDownloadsUpdates: Bool
 
-    init(updater:SPUUpdater) {
+    init(updater: SPUUpdater, updateStatus: SparkleUserDriverDelegate) {
         self.updater = updater
+        self.updateStatus = updateStatus
         self.automaticallyChecksForUpdates = updater.automaticallyChecksForUpdates
         self.automaticallyDownloadsUpdates = updater.automaticallyDownloadsUpdates
     }
@@ -63,11 +66,11 @@ struct UpdaterSettingsView: View {
                 .onChange(of: automaticallyDownloadsUpdates) { newValue in
                     updater.automaticallyDownloadsUpdates = newValue
                 }
-            CheckForUpdatesView(updater: updater)
+            CheckForUpdatesView(updater: updater, updateStatus: updateStatus)
         }.padding()
     }
 }
 
 #Preview {
-    SettingsView(updater: SPUStandardUpdaterController(startingUpdater: false, updaterDelegate: nil, userDriverDelegate: nil).updater)
+    SettingsView(updater: SPUStandardUpdaterController(startingUpdater: false, updaterDelegate: nil, userDriverDelegate: nil).updater, updateStatus: SparkleUserDriverDelegate())
 }

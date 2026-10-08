@@ -13,6 +13,13 @@ let UPDATE_NOTIFICATION_IDENTIFIER = "LoosePhabric.UpdateNotification"
 let PASTEBOARD_NOTIFICATION_IDENTIFIER = "LoosePhabric.PasteboardUpdated"
 let PASTEBOARD_TYPE = NSPasteboard.PasteboardType(rawValue: "x-LoosePhabric")
 
+// An agent app does not become active when its menu is used, so its windows open behind other apps.
+// The cooperative NSApp.activate() from macOS 14 is often declined, so use the older call.
+@MainActor
+func activateApp() {
+    NSApp.activate(ignoringOtherApps: true)
+}
+
 @main
 struct LoosePhabricApp: App {
     private let updaterController: SPUStandardUpdaterController
@@ -46,24 +53,73 @@ struct LoosePhabricApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("T", systemImage: "tray.and.arrow.down") {
-            AppMenu(updater: updaterController.updater)
+        MenuBarExtra {
+            AppMenu(updater: updaterController.updater, updateStatus: userDriverDelegate)
+        } label: {
+            MenuBarIcon(updateStatus: userDriverDelegate)
         }
         Settings {
-            SettingsView(updater: updaterController.updater)
+            SettingsView(updater: updaterController.updater, updateStatus: userDriverDelegate)
+        }
+    }
+}
+
+struct MenuBarIcon: View {
+    @ObservedObject var updateStatus: SparkleUserDriverDelegate
+    var body: some View {
+        if updateStatus.pendingUpdateVersion == nil {
+            Image(systemName: "tray.and.arrow.down")
+        } else {
+            Image(nsImage: Self.badgedIcon)
+        }
+    }
+
+    // A MenuBarExtra label shows only one image, so draw the badge into it.
+    @MainActor
+    private static let badgedIcon: NSImage = {
+        let view = Image(systemName: "tray.and.arrow.down")
+            .font(.system(size: NSFont.menuBarFont(ofSize: 0).pointSize))
+            .foregroundStyle(.black)
+            .overlay(alignment: .topTrailing) {
+                Circle()
+                    .frame(width: 6, height: 6)
+                    // Erase a ring around the badge, so that it stays visible over the tray.
+                    .background(Circle().frame(width: 9, height: 9).blendMode(.destinationOut))
+            }
+            .compositingGroup()
+        let renderer = ImageRenderer(content: view)
+        // The image is made once. 2x looks correct on Retina displays and scales down on others.
+        renderer.scale = 2
+        let image = renderer.nsImage ?? NSImage()
+        // Template images follow the menu bar's light or dark appearance.
+        image.isTemplate = true
+        return image
+    }()
+}
+
+// SettingsLink does not activate the app, so the window can open behind other apps.
+@available(macOS 14.0, *)
+struct OpenSettingsButton: View {
+    @Environment(\.openSettings) private var openSettings
+    var body: some View {
+        Button("Settings...") {
+            activateApp()
+            openSettings()
         }
     }
 }
 
 struct AppMenu: View {
     let updater: SPUUpdater
+    @ObservedObject var updateStatus: SparkleUserDriverDelegate
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     var body: some View {
         Label("LoosePhabric \(appVersion ?? "")", systemImage: "book")
         if #available(macOS 14.0, *) {
-            SettingsLink()
+            OpenSettingsButton()
         } else {
             Button("Settings...") {
+                activateApp()
                 if #available(macOS 13.0, *) {
                     NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
                 } else {
@@ -71,7 +127,7 @@ struct AppMenu: View {
                 }
             }
         }
-        CheckForUpdatesView(updater: updater)
+        CheckForUpdatesView(updater: updater, updateStatus: updateStatus)
         Divider()
         Button("Quit") {
             NSApplication.shared.terminate(nil)
@@ -121,6 +177,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     @MainActor
     func handleUpdaterRequest() {
+        activateApp()
         updaterController?.checkForUpdates(nil)
     }
 
@@ -143,31 +200,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 }
 
-class SparkleUserDriverDelegate: NSObject, SPUStandardUserDriverDelegate {
+class SparkleUserDriverDelegate: NSObject, ObservableObject, SPUStandardUserDriverDelegate {
+    // Set while a scheduled update waits for the user, to show it in the menu.
+    @Published var pendingUpdateVersion: String?
+
     var supportsGentleScheduledUpdateReminders: Bool {
         return true
     }
 
     func standardUserDriverShouldHandleShowingScheduledUpdate(_ update: SUAppcastItem, andInImmediateFocus immediateFocus: Bool) -> Bool {
-        // If the app has a reasonable amount of focus, it can show the update dialog safely. If not, we want to show a notification.
-        return immediateFocus
+        // Sparkle can show its window behind other apps, because macOS often declines its activation request.
+        // Always use a notification and the menu instead.
+        return false
     }
 
     func standardUserDriverWillHandleShowingUpdate(_ handleShowingUpdate: Bool, forUpdate update: SUAppcastItem, state: SPUUserUpdateState) {
         guard !handleShowingUpdate else { return }
         if state.userInitiated { return }
 
-        do {
-            let content = UNMutableNotificationContent()
-            content.title = "New update available"
-            content.body = "Version \(update.displayVersionString) is now available"
+        pendingUpdateVersion = update.displayVersionString
 
-            let request = UNNotificationRequest(identifier: UPDATE_NOTIFICATION_IDENTIFIER, content: content, trigger: nil)
-            UNUserNotificationCenter.current().add(request)
-        }
+        let content = UNMutableNotificationContent()
+        content.title = "New update available"
+        content.body = "Version \(update.displayVersionString) is now available"
+
+        let request = UNNotificationRequest(identifier: UPDATE_NOTIFICATION_IDENTIFIER, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 
     func standardUserDriverDidReceiveUserAttention(forUpdate update: SUAppcastItem) {
+        pendingUpdateVersion = nil
         UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [UPDATE_NOTIFICATION_IDENTIFIER])
+    }
+
+    func standardUserDriverWillFinishUpdateSession() {
+        pendingUpdateVersion = nil
     }
 }

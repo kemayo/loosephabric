@@ -26,16 +26,29 @@ final class CheckForUpdatesViewModel: ObservableObject {
 // apparently needed as a distinct view for Monterey compat
 struct CheckForUpdatesView: View {
     @ObservedObject private var checkForUpdatesViewModel: CheckForUpdatesViewModel
+    @ObservedObject private var updateStatus: SparkleUserDriverDelegate
     private let updater: SPUUpdater
 
-    init(updater: SPUUpdater) {
+    init(updater: SPUUpdater, updateStatus: SparkleUserDriverDelegate) {
         self.updater = updater
+        self.updateStatus = updateStatus
 
         self.checkForUpdatesViewModel = CheckForUpdatesViewModel(updater: updater)
     }
 
+    // With a pending update, checkForUpdates shows that update again, so the label tells the user.
+    private var label: String {
+        if let version = updateStatus.pendingUpdateVersion {
+            return "Update to version \(version)..."
+        }
+        return "Check for updates now..."
+    }
+
     var body: some View {
-        Button("Check for updates now...", action: updater.checkForUpdates)
+        Button(label) {
+            activateApp()
+            updater.checkForUpdates()
+        }
             .disabled(!checkForUpdatesViewModel.canCheckForUpdates)
     }
 }
