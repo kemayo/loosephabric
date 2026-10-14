@@ -50,7 +50,7 @@ final class GerritHandler: BaseHandler, Sendable {
                       cIndex < plusIndex,
                       plusIndex + 1 < pathComponents.count else { return false }
                 let projectNameComponents = pathComponents[cIndex+1..<plusIndex]
-                let projectName = projectNameComponents.joined(separator: "%2F")
+                let projectName = projectNameComponents.joined(separator: "/")
                 let changeNumber = pathComponents[plusIndex+1]
                 changeID = "\(projectName)~\(changeNumber)"
             }
@@ -68,7 +68,7 @@ final class GerritHandler: BaseHandler, Sendable {
         let isChangeID = changeID.wholeMatch(of: /I[a-fA-F0-9]{40}/) != nil
         let apiURLString = isChangeID
             ? "https://gerrit.wikimedia.org/r/changes/?q=change:\(changeID)"
-            : "https://gerrit.wikimedia.org/r/changes/\(changeID)"
+            : "https://gerrit.wikimedia.org/r/changes/\(changeID.replacingOccurrences(of: "/", with: "%2F"))"
         guard let apiURL = URL(string: apiURLString) else { return }
 
         let task = URLSession.shared.dataTask(with: apiURL) { (data, response, error) in
@@ -111,10 +111,10 @@ final class GerritHandler: BaseHandler, Sendable {
                 } else {
                     decoded = try decoder.decode(GerritResponse.self, from: jsonData)
                 }
-                var title = "\(decoded.subject) (\(decoded.id))"
+                var title = "\(decoded.subject) (\(decoded.id.removingPercentEncoding ?? decoded.id))"
                 title = self.decorateTitle(title, decoded.status)
                 DispatchQueue.main.async {
-                    self.setLinkToPasteboard(text: title.removingPercentEncoding ?? title, url: urlString, changeCount: changeCount)
+                    self.setLinkToPasteboard(text: title, url: urlString, changeCount: changeCount)
                 }
             } catch {
                 print("Decoding failed", error)
