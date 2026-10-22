@@ -46,15 +46,28 @@ final class PhabricatorHandler: BaseHandler, Sendable {
         return true
     }
 
+    // Store the lookup, not the finished title, so that the current settings apply to cached results.
+    let cache = TTLCache<PhabricatorLookup>(ttl: 5 * 60)
+
     func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int) {
-        if let token = Keychain.get(Keychain.phabricatorToken), !token.isEmpty {
-            conduitFetch(text: text, urlString: urlString, changeCount: changeCount, token: token)
+        // The text can include a comment anchor, as in "T12345#54321". The lookup needs only the object name.
+        let name = String(text.split(separator: "#").first ?? "")
+        let token = Keychain.get(Keychain.phabricatorToken) ?? ""
+        // The token controls what the lookup can see. Do not use a result with a different token, or with no token.
+        let cacheKey = (token.isEmpty ? "phabroxy" : "token-\(token.hashValue)") + ":" + name
+        if let cached = cache.get(cacheKey) {
+            print("Using cached Phabricator lookup: \(name)")
+            setLookupToPasteboard(cached.object, restricted: cached.restricted, urlString: urlString, changeCount: changeCount)
+            return
+        }
+        if token.isEmpty {
+            phabroxyFetch(text: text, urlString: urlString, changeCount: changeCount, cacheKey: cacheKey)
         } else {
-            phabroxyFetch(text: text, urlString: urlString, changeCount: changeCount)
+            conduitFetch(text: text, name: name, urlString: urlString, changeCount: changeCount, token: token, cacheKey: cacheKey)
         }
     }
 
-    func phabroxyFetch(text: String, urlString: String, changeCount: Int) {
+    func phabroxyFetch(text: String, urlString: String, changeCount: Int, cacheKey: String) {
         guard let url = URL(string: "https://phabroxy.toolforge.org/lookup/\(text)") else { return }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data, error == nil else {
@@ -71,6 +84,7 @@ final class PhabricatorHandler: BaseHandler, Sendable {
             print("API response: \(String(data: data, encoding: .utf8) ?? "UNENCODABLE")")
             if let decoded = try? JSONDecoder().decode(PhabroxyResponse.self, from: data) {
                 // Phabroxy cannot see restricted objects, so they never get to this point.
+                self.cache.set(cacheKey, PhabricatorLookup(object: decoded, restricted: false))
                 self.setLookupToPasteboard(decoded, restricted: false, urlString: urlString, changeCount: changeCount)
             } else {
                 self.fallbackHTMLFetch(objectName: text, urlString: urlString, changeCount: changeCount)
@@ -80,9 +94,7 @@ final class PhabricatorHandler: BaseHandler, Sendable {
         task.resume()
     }
 
-    func conduitFetch(text: String, urlString: String, changeCount: Int, token: String) {
-        // The text can include a comment anchor, as in "T12345#54321". Conduit needs only the object name.
-        let name = String(text.split(separator: "#").first ?? "")
+    func conduitFetch(text: String, name: String, urlString: String, changeCount: Int, token: String, cacheKey: String) {
         // Do not fall back to phabroxy: a user with a token can prefer not to send requests through it.
         Conduit.call("phid.lookup", token: token, params: [("names[0]", name)], as: [String: PhabroxyResponse].self) { result in
             guard case .success(let objects) = result, let object = objects[name] else {
@@ -93,22 +105,27 @@ final class PhabricatorHandler: BaseHandler, Sendable {
                 return
             }
             guard object.type == "TASK" else {
+                self.cache.set(cacheKey, PhabricatorLookup(object: object, restricted: false))
                 self.setLookupToPasteboard(object, restricted: false, urlString: urlString, changeCount: changeCount)
                 return
             }
             self.isRestrictedTask(phid: object.phid, token: token) { restricted in
-                self.setLookupToPasteboard(object, restricted: restricted, urlString: urlString, changeCount: changeCount)
+                // Do not cache an unknown policy, so that a temporary error does not mark a public task for the full cache time.
+                if let restricted {
+                    self.cache.set(cacheKey, PhabricatorLookup(object: object, restricted: restricted))
+                }
+                // If the policy is unknown, mark the task as restricted. A false mark is safer than a leaked title.
+                self.setLookupToPasteboard(object, restricted: restricted ?? true, urlString: urlString, changeCount: changeCount)
             }
         }
     }
 
-    // A task is restricted when not everyone can view it.
-    func isRestrictedTask(phid: String, token: String, completion: @escaping @Sendable (Bool) -> Void) {
+    // A task is restricted when not everyone can view it. The result is nil when the policy is unknown.
+    func isRestrictedTask(phid: String, token: String, completion: @escaping @Sendable (Bool?) -> Void) {
         Conduit.call("maniphest.search", token: token, params: [("constraints[phids][0]", phid)], as: ManiphestSearchResult.self) { result in
             guard case .success(let search) = result, let item = search.data.first else {
-                // If the policy is unknown, mark the task as restricted. A false mark is safer than a leaked title.
                 print("Could not get task policy")
-                completion(true)
+                completion(nil)
                 return
             }
             completion(item.fields.policy.view != "public")
@@ -196,6 +213,11 @@ struct PhabroxyResponse: Decodable {
     let type: String
     let typeName: String
     let uri: String
+}
+
+struct PhabricatorLookup {
+    let object: PhabroxyResponse
+    let restricted: Bool
 }
 
 struct ManiphestSearchResult: Decodable {
