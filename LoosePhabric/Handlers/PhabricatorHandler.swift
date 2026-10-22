@@ -47,7 +47,14 @@ final class PhabricatorHandler: BaseHandler, Sendable {
     }
 
     func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int) {
-        // First we're going to try using phabroxy
+        if let token = Keychain.get(Keychain.phabricatorToken), !token.isEmpty {
+            conduitFetch(text: text, urlString: urlString, changeCount: changeCount, token: token)
+        } else {
+            phabroxyFetch(text: text, urlString: urlString, changeCount: changeCount)
+        }
+    }
+
+    func phabroxyFetch(text: String, urlString: String, changeCount: Int) {
         guard let url = URL(string: "https://phabroxy.toolforge.org/lookup/\(text)") else { return }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data, error == nil else {
@@ -63,23 +70,67 @@ final class PhabricatorHandler: BaseHandler, Sendable {
             }
             print("API response: \(String(data: data, encoding: .utf8) ?? "UNENCODABLE")")
             if let decoded = try? JSONDecoder().decode(PhabroxyResponse.self, from: data) {
-                var fullName = decoded.fullName
-                var uri = decoded.uri
-                if urlString.contains("#") {
-                    let comment = urlString.split(separator: "#").last ?? ""
-                    fullName = fullName.replacingOccurrences(of: "\(decoded.name)", with: "\(decoded.name)#\(comment)")
-                    uri = uri + "#\(comment)"
-                }
-                fullName = self.decorateTitle(fullName, decoded.status)
-                DispatchQueue.main.async {
-                    self.setLinkToPasteboard(text: fullName, url: uri, changeCount: changeCount)
-                }
+                // Phabroxy cannot see restricted objects, so they never get to this point.
+                self.setLookupToPasteboard(decoded, restricted: false, urlString: urlString, changeCount: changeCount)
             } else {
                 self.fallbackHTMLFetch(objectName: text, urlString: urlString, changeCount: changeCount)
             }
         }
 
         task.resume()
+    }
+
+    func conduitFetch(text: String, urlString: String, changeCount: Int, token: String) {
+        // The text can include a comment anchor, as in "T12345#54321". Conduit needs only the object name.
+        let name = String(text.split(separator: "#").first ?? "")
+        // Do not fall back to phabroxy: a user with a token can prefer not to send requests through it.
+        Conduit.call("phid.lookup", token: token, params: [("names[0]", name)], as: [String: PhabroxyResponse].self) { result in
+            guard case .success(let objects) = result, let object = objects[name] else {
+                if case .failure(let error) = result {
+                    print("Conduit phid.lookup failed: \(error.localizedDescription)")
+                }
+                self.fallbackHTMLFetch(objectName: text, urlString: urlString, changeCount: changeCount)
+                return
+            }
+            guard object.type == "TASK" else {
+                self.setLookupToPasteboard(object, restricted: false, urlString: urlString, changeCount: changeCount)
+                return
+            }
+            self.isRestrictedTask(phid: object.phid, token: token) { restricted in
+                self.setLookupToPasteboard(object, restricted: restricted, urlString: urlString, changeCount: changeCount)
+            }
+        }
+    }
+
+    // A task is restricted when not everyone can view it.
+    func isRestrictedTask(phid: String, token: String, completion: @escaping @Sendable (Bool) -> Void) {
+        Conduit.call("maniphest.search", token: token, params: [("constraints[phids][0]", phid)], as: ManiphestSearchResult.self) { result in
+            guard case .success(let search) = result, let item = search.data.first else {
+                // If the policy is unknown, mark the task as restricted. A false mark is safer than a leaked title.
+                print("Could not get task policy")
+                completion(true)
+                return
+            }
+            completion(item.fields.policy.view != "public")
+        }
+    }
+
+    func setLookupToPasteboard(_ decoded: PhabroxyResponse, restricted: Bool, urlString: String, changeCount: Int) {
+        var fullName = decoded.fullName
+        var uri = decoded.uri
+        if urlString.contains("#") {
+            let comment = urlString.split(separator: "#").last ?? ""
+            fullName = fullName.replacingOccurrences(of: "\(decoded.name)", with: "\(decoded.name)#\(comment)")
+            uri = uri + "#\(comment)"
+        }
+        fullName = self.decorateTitle(fullName, decoded.status)
+        // Always mark restricted tasks, so that the user sees the title is not public before they paste it.
+        if restricted {
+            fullName = "🔒 \(fullName)"
+        }
+        DispatchQueue.main.async {
+            self.setLinkToPasteboard(text: fullName, url: uri, changeCount: changeCount)
+        }
     }
 
     func fallbackHTMLFetch(objectName: String, urlString: String, changeCount: Int) {
@@ -140,4 +191,17 @@ struct PhabroxyResponse: Decodable {
     let type: String
     let typeName: String
     let uri: String
+}
+
+struct ManiphestSearchResult: Decodable {
+    struct Item: Decodable {
+        struct Fields: Decodable {
+            struct Policy: Decodable {
+                let view: String
+            }
+            let policy: Policy
+        }
+        let fields: Fields
+    }
+    let data: [Item]
 }
