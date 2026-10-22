@@ -15,6 +15,9 @@ final class GithubHandler: BaseHandler, Sendable {
         "closed": "❌",
     ]
 
+    // Unauthenticated API requests are limited to 60 an hour, and users often copy the same link again.
+    let cache = TTLCache<GithubIssue>(ttl: 5 * 60)
+
     func handle(_ text: String) -> Bool {
         // https://github.com/wikimedia/eslint-config-wikimedia/pull/666
         // https://github.com/wikimedia/eslint-config-wikimedia/pull/666/files
@@ -31,10 +34,18 @@ final class GithubHandler: BaseHandler, Sendable {
     }
 
     func fetchTitleAndSetToPasteboard(text: String, urlString: String, changeCount: Int) {
+        // GitHub names are not case-sensitive.
+        let cacheKey = text.lowercased()
+        if let issue = cache.get(cacheKey) {
+            print("Using cached GitHub issue: \(text)")
+            setIssueToPasteboard(issue, text: text, urlString: urlString, changeCount: changeCount)
+            return
+        }
         // The issues API also returns pull requests, so one request covers both.
         let parts = text.split(separator: "#")
         guard parts.count == 2,
               let url = URL(string: "https://api.github.com/repos/\(parts[0])/issues/\(parts[1])") else { return }
+        print("Fetching GitHub issue: \(url)")
         var request = URLRequest(url: url)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -52,13 +63,19 @@ final class GithubHandler: BaseHandler, Sendable {
                 print("Could not decode GitHub response")
                 return
             }
-            let title = self.decorateTitle(issue.title, issue.status)
-            DispatchQueue.main.async {
-                self.setLinkToPasteboard(text: "\(title) (\(text))", url: urlString, changeCount: changeCount)
-            }
+            self.cache.set(cacheKey, issue)
+            self.setIssueToPasteboard(issue, text: text, urlString: urlString, changeCount: changeCount)
         }
 
         task.resume()
+    }
+
+    func setIssueToPasteboard(_ issue: GithubIssue, text: String, urlString: String, changeCount: Int) {
+        // Decorate at use time, so that a change to the status setting applies to cached issues.
+        let title = decorateTitle(issue.title, issue.status)
+        DispatchQueue.main.async {
+            self.setLinkToPasteboard(text: "\(title) (\(text))", url: urlString, changeCount: changeCount)
+        }
     }
 }
 
