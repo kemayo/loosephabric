@@ -77,17 +77,7 @@ struct MenuBarIcon: View {
     // A MenuBarExtra label shows only one image, so draw the badge into it.
     @MainActor
     private static let badgedIcon: NSImage = {
-        let view = Image(systemName: "tray.and.arrow.down")
-            .font(.system(size: NSFont.menuBarFont(ofSize: 0).pointSize))
-            .foregroundStyle(.black)
-            .overlay(alignment: .topTrailing) {
-                Circle()
-                    .frame(width: 6, height: 6)
-                    // Erase a ring around the badge, so that it stays visible over the tray.
-                    .background(Circle().frame(width: 9, height: 9).blendMode(.destinationOut))
-            }
-            .compositingGroup()
-        let renderer = ImageRenderer(content: view)
+        let renderer = ImageRenderer(content: BadgedTrayIcon())
         // The image is made once. 2x looks correct on Retina displays and scales down on others.
         renderer.scale = 2
         let image = renderer.nsImage ?? NSImage()
@@ -97,8 +87,23 @@ struct MenuBarIcon: View {
     }()
 }
 
+// ImageRenderer is main-actor isolated. Swift 6 cannot prove that an opaque "some View" is safe to give it, so use a named view.
+private struct BadgedTrayIcon: View {
+    var body: some View {
+        Image(systemName: "tray.and.arrow.down")
+            .font(.system(size: NSFont.menuBarFont(ofSize: 0).pointSize))
+            .foregroundStyle(.black)
+            .overlay(alignment: .topTrailing) {
+                Circle()
+                    .frame(width: 6, height: 6)
+                    // Erase a ring around the badge, so that it stays visible over the tray.
+                    .background(Circle().frame(width: 9, height: 9).blendMode(.destinationOut))
+            }
+            .compositingGroup()
+    }
+}
+
 // SettingsLink does not activate the app, so the window can open behind other apps.
-@available(macOS 14.0, *)
 struct OpenSettingsButton: View {
     @Environment(\.openSettings) private var openSettings
     var body: some View {
@@ -115,18 +120,7 @@ struct AppMenu: View {
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     var body: some View {
         Label("LoosePhabric \(appVersion ?? "")", systemImage: "book")
-        if #available(macOS 14.0, *) {
-            OpenSettingsButton()
-        } else {
-            Button("Settings...") {
-                activateApp()
-                if #available(macOS 13.0, *) {
-                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                } else {
-                    NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
-                }
-            }
-        }
+        OpenSettingsButton()
         CheckForUpdatesView(updater: updater, updateStatus: updateStatus)
         Divider()
         Button("Quit") {
