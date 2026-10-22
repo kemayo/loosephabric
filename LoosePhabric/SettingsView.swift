@@ -55,6 +55,7 @@ struct GeneralSettingsView: View {
 }
 
 struct PhabricatorSettingsView: View {
+    @AppStorage("maskRestrictedTitles") private var maskRestrictedTitles: Bool = false
     @State private var token: String = ""
     @State private var message: String = ""
 
@@ -74,7 +75,9 @@ struct PhabricatorSettingsView: View {
                     .foregroundStyle(.secondary)
             }
             Section {
-                Text("Without a token, titles come from phabroxy.toolforge.org. With a token, they come directly from Phabricator, and include the tasks that your account can see. A 🔒 marks tasks that are not public.")
+                Toggle("Hide titles of restricted tasks", isOn: $maskRestrictedTitles)
+            } footer: {
+                Text("Without a token, titles come from phabroxy.toolforge.org. With a token, they come directly from Phabricator, and include the tasks that your account can see. A 🔒 marks tasks that are not public. To link those tasks without their titles, hide them.")
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }

@@ -116,14 +116,19 @@ final class PhabricatorHandler: BaseHandler, Sendable {
     }
 
     func setLookupToPasteboard(_ decoded: PhabroxyResponse, restricted: Bool, urlString: String, changeCount: Int) {
-        var fullName = decoded.fullName
+        // A token gives the full access of the account, so let users keep restricted titles off the pasteboard.
+        let mask = restricted && UserDefaults.standard.bool(forKey: "maskRestrictedTitles")
+        var fullName = mask ? "\(decoded.name): Restricted task" : decoded.fullName
         var uri = decoded.uri
         if urlString.contains("#") {
             let comment = urlString.split(separator: "#").last ?? ""
             fullName = fullName.replacingOccurrences(of: "\(decoded.name)", with: "\(decoded.name)#\(comment)")
             uri = uri + "#\(comment)"
         }
-        fullName = self.decorateTitle(fullName, decoded.status)
+        // The status of a restricted task can also be sensitive, so do not show it when the title is masked.
+        if !mask {
+            fullName = self.decorateTitle(fullName, decoded.status)
+        }
         // Always mark restricted tasks, so that the user sees the title is not public before they paste it.
         if restricted {
             fullName = "🔒 \(fullName)"
