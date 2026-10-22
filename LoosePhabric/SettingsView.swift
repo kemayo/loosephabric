@@ -34,6 +34,7 @@ struct GeneralSettingsView: View {
     @AppStorage("phabricator") private var phabricator: Bool = true
     @AppStorage("gerrit") private var gerrit: Bool = true
     @AppStorage("gitlab") private var gitlab: Bool = true
+    @AppStorage("github") private var github: Bool = true
     @AppStorage("notify") private var notify: Bool = true
 
     var body: some View {
@@ -44,7 +45,8 @@ struct GeneralSettingsView: View {
             Divider()
             Toggle("Watch for Phabricator", isOn: $phabricator)
             Toggle("Watch for Gerrit", isOn: $gerrit)
-            Toggle("Watch for Gitlab", isOn: $gitlab)
+            Toggle("Watch for GitLab", isOn: $gitlab)
+            Toggle("Watch for GitHub", isOn: $github)
             Divider()
             LaunchAtLogin.Toggle()
         }

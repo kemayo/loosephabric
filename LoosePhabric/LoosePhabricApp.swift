@@ -35,6 +35,7 @@ struct LoosePhabricApp: App {
             "phabricator": true,
             "gerrit": true,
             "gitlab": true,
+            "github": true,
             "notify": true,
         ])
 
@@ -48,6 +49,7 @@ struct LoosePhabricApp: App {
         pasteboardController.registerHandler(PhabricatorHandler())
         pasteboardController.registerHandler(GerritHandler())
         pasteboardController.registerHandler(GitlabHandler())
+        pasteboardController.registerHandler(GithubHandler())
 
         appDelegate.updaterController = updaterController
     }

@@ -1,6 +1,6 @@
 # LoosePhabric
 
-This is a small, opinionated application that helps you copy/paste links from Wikimedia Phabricator, Wikimedia GitLab, and Wikimedia Gerrit into Slack, Google Docs, and other places that support paste from HTML/RTF.
+This is a small, opinionated application that helps you copy/paste links from Wikimedia Phabricator, Wikimedia GitLab, Wikimedia Gerrit, and GitHub into Slack, Google Docs, and other places that support paste from HTML/RTF.
 
 ## Why
 
@@ -10,7 +10,7 @@ Similarly, for Gerrit, it's there is a lot more context in seeing [Add type rq_t
 
 ## How
 
-Download the latest version from the [releases page](https://github.com/kemayo/loosephabric/releases/latest), add `LoosePhabric` to the Applications directory, and open it. In the menu bar, you can configure it to launch at login. You can also select which of Phabricator, GitLab, and Gerrit links it should operate on.
+Download the latest version from the [releases page](https://github.com/kemayo/loosephabric/releases/latest), add `LoosePhabric` to the Applications directory, and open it. In the menu bar, you can configure it to launch at login. You can also select which of Phabricator, GitLab, Gerrit, and GitHub links it should operate on.
 
 ### Phabricator
 
@@ -23,6 +23,10 @@ If you copy a Wikimedia GitLab merge request URL, LoosePhabric will make a reque
 ### Gerrit
 
 If you copy a Gerrit patch URL (short or long), or a Gerrit change-id (`If317f991a4782bbc980d3923178799e1c67ebaa8`), LoosePhabric will make an API request to Gerrit to fetch the patch title, and update your clipboard with a nicely formatted HTML link.
+
+### GitHub
+
+If you copy a GitHub pull request or issue URL, LoosePhabric will make a request to the GitHub API to fetch the title, and update your clipboard with a nicely formatted HTML link. This works only for public repositories.
 
 ## Tips
 
