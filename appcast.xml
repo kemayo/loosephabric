@@ -7,6 +7,20 @@
     <language>en</language>
 
     <item>
+      <title>0.13</title>
+      <pubDate>Thu, 22 Oct 2026 20:33:36 -0500</pubDate>
+      <sparkle:version>18</sparkle:version>
+      <sparkle:shortVersionString>0.13</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <sparkle:releaseNotesLink>https://kemayo.github.io/loosephabric/releasenotes.html</sparkle:releaseNotesLink>
+      <enclosure
+        url="https://github.com/kemayo/loosephabric/releases/download/v0.13/LoosePhabric-v0.13.zip"
+        sparkle:edSignature="P0CFLl84Y0qTTIDrl/LRxLeLq3bqYc/j9VgM4V/pLYCAbrwqzXLrzJfXMSZeN2DWu+firt3SfWcEG+RJ4TNdCw==" length="1589029"
+        type="application/octet-stream"/>
+    </item>
+
+
+    <item>
       <title>0.12</title>
       <pubDate>Thu, 22 Oct 2026 15:02:32 -0500</pubDate>
       <sparkle:version>17</sparkle:version>
